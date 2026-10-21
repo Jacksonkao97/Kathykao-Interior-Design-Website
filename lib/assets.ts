@@ -1,7 +1,13 @@
 // Resolves an asset path (project photos, GLB models) against the asset CDN.
-// In production this points at Firebase Storage; locally it falls back to
-// files in /public.
-const base = (process.env.NEXT_PUBLIC_ASSET_BASE_URL ?? "").replace(/\/$/, "");
+// In production this points at Firebase Storage; with no bucket configured
+// it falls back to files in /public.
+// Defaults to the public download endpoint of the project's Firebase Storage
+// bucket when NEXT_PUBLIC_ASSET_BASE_URL is not set.
+const bucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+const base = (
+  process.env.NEXT_PUBLIC_ASSET_BASE_URL ||
+  (bucket ? `https://firebasestorage.googleapis.com/v0/b/${bucket}/o` : "")
+).replace(/\/$/, "");
 
 export function assetUrl(path: string) {
   const clean = path.replace(/^\//, "");

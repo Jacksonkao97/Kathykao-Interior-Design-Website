@@ -8,7 +8,7 @@ export const siteConfig = {
   title: "Kathy Kao — Interior Designer",
   description:
     "Kathy Kao is an interior designer creating calm, considered residential and hospitality spaces, from the first floor plan sketch to the finished room.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://kathykao-design.web.app").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://kathykao-personal-website.web.app").replace(/\/$/, ""),
   locale: "en_US",
   // TODO: replace with the real details.
   email: "hello@kathykao.design",

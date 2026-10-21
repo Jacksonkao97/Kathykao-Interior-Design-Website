@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Portfolio assets are public to read and can only be changed from the
+// Firebase console or with admin credentials (e.g. gsutil / firebase CLI).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /projects/{allPaths=**} {
+      allow read;
+    }
+    match /models/{allPaths=**} {
+      allow read;
+    }
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
