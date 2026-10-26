@@ -25,7 +25,7 @@ lib/                     site config, placeholder content, store, structured dat
 
 ```bash
 npm install
-cp .env.example .env.local   # set site URL and WhatsApp number
+cp .env.example .env.local   # Firebase config is prefilled; set the WhatsApp number
 npm run dev
 ```
 
@@ -33,9 +33,18 @@ npm run dev
 
 ## Content
 
-Placeholder content lives in `lib/projects.ts`, `lib/experience.ts` and `lib/site.ts`. Projects without a `cover` image render generated plan artwork in the project's palette. Add `cover` / `gallery` paths to show real photos; they resolve through `lib/assets.ts` against `NEXT_PUBLIC_ASSET_BASE_URL` (Firebase Storage) or `/public`.
+Placeholder content lives in `lib/projects.ts`, `lib/experience.ts` and `lib/site.ts`. Projects without a `cover` image render generated plan artwork in the project's palette.
 
-Because static export has no image optimizer, upload images already resized (for example 1600px and 800px WebP) and set `Cache-Control: public, max-age=31536000` on them in Firebase Storage. `storage.cors.json` can be applied with `gsutil cors set storage.cors.json gs://<bucket>`.
+### Images and models (Firebase Storage)
+
+The Firebase project is `kathykao-personal-website`. Upload project photos under `projects/` and 3D models under `models/` in its Storage bucket, then reference them by path, e.g. `cover: "projects/harbour-view/cover.webp"`. `lib/assets.ts` turns that into the bucket's public download URL (or `/public/...` when no bucket is configured).
+
+- `storage.rules` makes `projects/` and `models/` publicly readable and blocks all writes from the web; upload from the Firebase console or CLI. Deploy rules with `firebase deploy --only storage`.
+- Static export has no image optimizer, so upload images already resized (for example 1600px and 800px WebP).
+- Set long caching on uploads so browsers and the CDN keep them: `gsutil -m setmeta -h "Cache-Control:public, max-age=31536000, immutable" "gs://kathykao-personal-website.firebasestorage.app/projects/**"`. Use new filenames when replacing an image.
+- `storage.cors.json` allows the 3D loader to fetch models cross-origin: `gsutil cors set storage.cors.json gs://kathykao-personal-website.firebasestorage.app`.
+
+`lib/firebase.ts` exposes a lazily initialised Firebase app and Storage instance for browser code that needs the SDK (for example listing a folder or saving enquiries later). Nothing imports it yet, so it adds no weight to pages.
 
 ## Contact
 
@@ -46,6 +55,5 @@ The footer form on every page validates name, email and message, then opens What
 ```bash
 npm i -g firebase-tools
 firebase login
-# set the project id in .firebaserc
-npm run deploy
+npm run deploy               # project is set in .firebaserc
 ```
