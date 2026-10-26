@@ -52,6 +52,15 @@ The footer form on every page validates name, email and message, then opens What
 
 ## Deploy
 
+Merging to `main` deploys automatically: `.github/workflows/firebase-hosting-merge.yml` lints, builds and publishes `out/` to the live Firebase Hosting site. Every pull request also gets a preview URL (valid 7 days), posted as a PR comment by `.github/workflows/firebase-hosting-pull-request.yml`.
+
+The workflows need, under **Settings > Secrets and variables > Actions**:
+
+- Secret `FIREBASE_SERVICE_ACCOUNT_KATHYKAO_PERSONAL_WEBSITE`: JSON key of a service account with the Firebase Hosting Admin, Firebase Authentication Admin and API Keys Viewer roles.
+- Variables with the same names as in `.env.example` (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_FIREBASE_*`, optional `NEXT_PUBLIC_ASSET_BASE_URL`). They are baked into the static build.
+
+To deploy by hand instead:
+
 ```bash
 npm i -g firebase-tools
 firebase login

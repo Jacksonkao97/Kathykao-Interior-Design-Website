@@ -1,0 +1,48 @@
+# Builds the static export and deploys it to the live Firebase Hosting site
+# on every push to main (i.e. every merged pull request).
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two production deploys at once; a newer push waits for the
+# current deploy instead of cancelling it half way.
+concurrency:
+  group: firebase-hosting-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      # Build-time config comes from the repo's Actions variables (names as in
+      # .env.example). Only variables that are set are exported, so unset ones
+      # fall back to the defaults in lib/ instead of becoming empty strings.
+      - name: Build
+        env:
+          VARS: ${{ toJSON(vars) }}
+        run: |
+          eval "$(jq -r 'to_entries[] | select(.key | startswith("NEXT_PUBLIC_")) | select(.value != "") | "export \(.key)=\(.value | @sh)"' <<<"$VARS")"
+          npm run build
+      - run: npm run typecheck
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KATHYKAO_PERSONAL_WEBSITE }}
+          projectId: kathykao-personal-website
+          channelId: live
