@@ -495,6 +495,7 @@ function Lights({
         shadow-camera-top={8}
         shadow-camera-bottom={-8}
         shadow-bias={-0.0005}
+        shadow-radius={4}
       />
       <pointLight ref={lamp} position={[-3.75, 1.5, 2.95]} color="#ffbe7a" distance={6} decay={1.6} intensity={0} />
     </>
@@ -526,7 +527,9 @@ export default function RoomScene({ active, onReady }: { active: boolean; onRead
 
   return (
     <Canvas
-      shadows
+      // three r18x removed PCFSoftShadowMap, which `shadows={true}` asks for;
+      // PCF with a blur radius on the light gives the same soft edges.
+      shadows="percentage"
       flat
       dpr={dpr}
       frameloop={active ? "always" : "never"}
