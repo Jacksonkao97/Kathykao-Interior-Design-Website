@@ -14,6 +14,8 @@ const buttonVariants = cva(
         outline: "border border-foreground/20 bg-transparent hover:bg-foreground/5",
         ghost: "hover:bg-foreground/5",
         link: "text-foreground underline-offset-4 hover:underline",
+        // Square outline with letter-spaced caps, filled with ink on hover.
+        line: "caps rounded-none border border-foreground bg-transparent tracking-[0.24em] duration-400 hover:bg-foreground hover:text-background",
       },
       size: {
         default: "h-10 px-5 py-2",

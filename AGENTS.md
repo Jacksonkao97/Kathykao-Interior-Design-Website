@@ -1,8 +1,9 @@
 # Kathy Kao Interior Design — agent guide
 
-Portfolio website for interior designer Kathy Kao. Pages: home (a scroll-driven
-3D story), projects (index and one static page per project), experience, and a
-contact form in the footer of every page.
+Portfolio website for interior designer Kathy Kao. Pages: home (photo
+slideshow, a turning clay 3D model of the featured project, latest work),
+projects (index and one static page per project), experience (labelled
+"About" in the nav), and a contact form in the footer of every page.
 
 ## Layout
 
@@ -12,12 +13,17 @@ contact form in the footer of every page.
   `manifest.ts`, `opengraph-image.tsx`).
 - `components/ui/`: shadcn/ui components, written by hand (the shadcn CLI
   registry may be unreachable). Follow the shadcn "new-york" style.
-- `components/home/`: the scroll story section and its 2D plan fallback.
-- `components/three/`: the React Three Fiber scene (`room-scene.tsx`), floor
-  plan data (`plan.ts`) and scroll windows for each phase (`timeline.ts`).
-- `lib/`: site config (`site.ts`), placeholder content (`projects.ts`,
-  `experience.ts`), the Zustand store, structured data, asset URLs and
-  Firebase setup.
+- `components/home/`: home page sections (hero slideshow, featured model,
+  latest work, section frame with side labels).
+- `components/three/`: the React Three Fiber clay model (`clay-model.tsx`)
+  and the apartment it shows (`apartment.ts`, plain boxes, cylinders and
+  spheres in metres).
+- `lib/`: site config (`site.ts`), placeholder content (`home.ts`,
+  `projects.ts`, `experience.ts`), structured data, asset URLs and Firebase
+  setup.
+- `public/placeholders/`: stand-in renders used until real photography
+  exists. Referenced with site-rooted paths (`/placeholders/…`), which
+  `assetUrl()` passes through unchanged.
 
 ## Stack
 
@@ -30,28 +36,30 @@ contact form in the footer of every page.
 - `next/image` runs with `images.unoptimized`. Upload images to Firebase
   Storage already resized, and reference them through `assetUrl()` in
   `lib/assets.ts`.
-- Tailwind CSS v4. Theme tokens live in `app/globals.css` (warm paper and ink
-  palette, terracotta accent, blueprint blue). Fonts are Fraunces (serif
-  headings) and Manrope (body).
-- React Three Fiber + drei for 3D, GSAP ScrollTrigger for scroll, Zustand
-  for shared state.
+- Tailwind CSS v4. Theme tokens live in `app/globals.css` (cream paper and
+  soft ink, after Norm Architects). Fonts are Jost (sans, body and caps
+  labels) and Libre Caslon Text (serif). Utilities: `caps` for small
+  letter-spaced labels, `title-caps` for bold serif titles, `page-inner` for
+  the home page gutter.
+- React Three Fiber + drei for 3D.
 - TypeScript 6. Stay below 6.1 until `typescript-eslint` supports newer
   versions.
 
-## The home page scroll story
+## The home page
 
-- Five steps: sketch → plan → build → furnish → light. Each step is one screen
-  of text over a sticky canvas. Step text is server-rendered, so it stays in the
-  HTML for SEO. Only the first step uses the page `<h1>`.
-- ScrollTrigger writes progress (0 → 1) to `useStoryStore`. The scene reads it
-  every frame with `useStoryStore.getState()` inside `useFrame`, never through
-  React state, so scrolling doesn't re-render components.
-- Phase timing lives in `components/three/timeline.ts`. Keep it lined up with
-  the step copy in `components/home/blueprint-story.tsx`.
-- three.js loads with `next/dynamic` and `ssr: false`, and stops rendering
-  when the section is off screen. Browsers without WebGL get the static
-  `PlanSketch`. Don't use drei helpers that download assets at runtime (for
-  example `Environment` presets).
+- Order: hero slideshow, featured project, latest work, then the footer's
+  contact section. Copy and slides live in `lib/home.ts`; latest work shows
+  the first six entries of `lib/projects.ts` in two rows (wide photo first,
+  then mirrored).
+- The page `<h1>` is visually hidden; slide and section titles are `<h2>`.
+- The header is fixed. On `/` it sits over the hero (element `#hero`) in light
+  text and turns solid once the hero scrolls away; other pages get a spacer.
+- The featured model shows a still render first. three.js loads with
+  `next/dynamic` and `ssr: false` only when the section nears the screen,
+  renders only while on screen, and never loads without WebGL. It turns
+  slowly and can be dragged; it stops turning for reduced motion. Don't use
+  drei helpers that download assets at runtime (for example `Environment`
+  presets).
 - Mutating three.js objects inside `useFrame` is intended.
   `react-hooks/immutability` is turned off only for `components/three/**`.
 - Shadows use `shadows="percentage"`, because three r18x removed

@@ -10,6 +10,8 @@ const base = (
 ).replace(/\/$/, "");
 
 export function assetUrl(path: string) {
+  // Site-rooted paths ("/placeholders/…") are files in /public, served as is.
+  if (path.startsWith("/")) return path;
   const clean = path.replace(/^\//, "");
   if (!base) return `/${clean}`;
   // Firebase Storage REST URLs need the object path encoded as one segment.

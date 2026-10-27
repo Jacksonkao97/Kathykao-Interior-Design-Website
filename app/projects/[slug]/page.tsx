@@ -46,11 +46,11 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <p className="eyebrow mt-10">
           {project.category} · {project.location}
         </p>
-        <h1 className="mt-4 max-w-4xl text-5xl leading-[1.05] md:text-7xl">{project.title}</h1>
+        <h1 className="mt-4 max-w-4xl text-4xl leading-[1.15] md:text-6xl">{project.title}</h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{project.summary}</p>
       </header>
 
-      <ProjectArt project={project} priority className="container-page mt-12 aspect-[16/9] rounded-lg md:mt-16" />
+      <ProjectArt project={project} priority className="container-page mt-12 aspect-[16/9] md:mt-16" />
 
       <div className="container-page grid gap-12 py-16 md:grid-cols-[1fr_2fr] md:py-24">
         <dl className="grid h-fit grid-cols-2 gap-6 text-sm md:grid-cols-1">
@@ -84,7 +84,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
             key={v}
             project={project}
             variant={v}
-            className={v === 3 ? "aspect-[16/9] rounded-lg md:col-span-2" : "aspect-[4/5] rounded-lg"}
+            className={v === 3 ? "aspect-[16/9] md:col-span-2" : "aspect-[4/5]"}
           />
         ))}
       </section>

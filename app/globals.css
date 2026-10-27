@@ -1,29 +1,30 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Warm paper and ink palette, with a blueprint blue used by the 2D drawing
-   stage of the home page story. Tokens follow shadcn/ui naming. */
+/* Cream paper and soft ink, with letter-spaced caps for titles and labels
+   (the "Kathy's mix" design). Tokens follow shadcn/ui naming. */
 :root {
-  --radius: 0.5rem;
-  --background: #f5f0e8;
-  --foreground: #1f1d1a;
-  --card: #fbf8f3;
-  --card-foreground: #1f1d1a;
-  --popover: #fbf8f3;
-  --popover-foreground: #1f1d1a;
-  --primary: #1f1d1a;
-  --primary-foreground: #f5f0e8;
-  --secondary: #e9e1d4;
-  --secondary-foreground: #1f1d1a;
-  --muted: #ebe4d8;
-  --muted-foreground: #6b6359;
-  --accent: #b5643c;
-  --accent-foreground: #fbf8f3;
-  --destructive: #b42318;
-  --border: #ddd3c4;
-  --input: #d3c8b7;
-  --ring: #b5643c;
-  --blueprint: #2c4a6b;
+  --radius: 0.25rem;
+  --background: #f5f1e5;
+  --foreground: #383839;
+  --card: #f9f6ee;
+  --card-foreground: #383839;
+  --popover: #f9f6ee;
+  --popover-foreground: #383839;
+  --primary: #383839;
+  --primary-foreground: #f5f1e5;
+  --secondary: #ebe6d8;
+  --secondary-foreground: #383839;
+  --muted: #ebe6d8;
+  --muted-foreground: #6b6a66;
+  --accent: #383839;
+  --accent-foreground: #f5f1e5;
+  --destructive: #a1301c;
+  --border: #ddd6c5;
+  --input: #cfc7b4;
+  --ring: #383839;
+  /* Light text over photographs. */
+  --light: #f6f0de;
 }
 
 @theme inline {
@@ -45,13 +46,13 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-blueprint: var(--blueprint);
+  --color-light: var(--light);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: var(--font-manrope);
-  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-jost);
+  --font-serif: var(--font-caslon);
 }
 
 @layer base {
@@ -62,12 +63,12 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans text-[13px] leading-[1.7];
   }
   h1,
   h2,
   h3 {
-    @apply font-serif tracking-tight;
+    @apply font-serif;
     text-wrap: balance;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -81,6 +82,21 @@
   @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
 }
 
+/* Full-width page gutter used by the home page sections. */
+@utility page-inner {
+  @apply px-5 min-[900px]:px-[77px];
+}
+
+/* Small letter-spaced sans caps: nav, labels, meta lines. */
+@utility caps {
+  @apply font-sans text-[11px] leading-[1.6] font-normal tracking-[0.18em] uppercase;
+}
+
 @utility eyebrow {
-  @apply text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground;
+  @apply caps text-muted-foreground;
+}
+
+/* Bold serif caps with wide tracking: project and section titles. */
+@utility title-caps {
+  @apply font-serif text-[13px] leading-[1.5] font-bold tracking-[0.42em] uppercase;
 }

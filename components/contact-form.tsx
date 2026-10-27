@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,13 +37,16 @@ export function ContactForm() {
     window.open(buildWhatsAppUrl(name, email, message), "_blank", "noopener,noreferrer");
   }
 
-  const field = "border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground placeholder:text-primary-foreground/40";
+  const field =
+    "rounded-none border-0 border-b bg-transparent px-0 text-sm tracking-[0.01em] focus-visible:border-foreground focus-visible:ring-0";
+  const label = "caps font-normal text-muted-foreground";
+  const error = "text-xs text-destructive";
 
   return (
-    <form onSubmit={onSubmit} noValidate className="grid gap-6" aria-describedby="contact-note">
-      <div className="grid gap-6 sm:grid-cols-2">
+    <form onSubmit={onSubmit} noValidate className="grid gap-5" aria-describedby="contact-note">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
-          <Label htmlFor="contact-name">Name</Label>
+          <Label className={label} htmlFor="contact-name">Name</Label>
           <Input
             id="contact-name"
             name="name"
@@ -55,13 +57,13 @@ export function ContactForm() {
             className={field}
           />
           {errors.name && (
-            <p id="contact-name-error" className="text-sm text-[#f3b7a0]">
+            <p id="contact-name-error" className={error}>
               {errors.name}
             </p>
           )}
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="contact-email">Email</Label>
+          <Label className={label} htmlFor="contact-email">Email</Label>
           <Input
             id="contact-email"
             name="email"
@@ -73,37 +75,36 @@ export function ContactForm() {
             className={field}
           />
           {errors.email && (
-            <p id="contact-email-error" className="text-sm text-[#f3b7a0]">
+            <p id="contact-email-error" className={error}>
               {errors.email}
             </p>
           )}
         </div>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="contact-message">About your project</Label>
+        <Label className={label} htmlFor="contact-message">About your project</Label>
         <Textarea
           id="contact-message"
           name="message"
-          rows={5}
+          rows={3}
           placeholder="The space, rough size, timing and what you'd love it to feel like."
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? "contact-message-error" : undefined}
           className={field}
         />
         {errors.message && (
-          <p id="contact-message-error" className="text-sm text-[#f3b7a0]">
+          <p id="contact-message-error" className={error}>
             {errors.message}
           </p>
         )}
       </div>
-      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p id="contact-note" className="text-xs text-primary-foreground/50">
-          Sending opens WhatsApp with your message ready to go.
-        </p>
-        <Button type="submit" variant="accent" size="lg">
-          <MessageCircle />
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-2">
+        <Button type="submit" variant="line" size="lg" className="px-[30px] text-[11px]">
           Send via WhatsApp
         </Button>
+        <p id="contact-note" className="text-xs text-muted-foreground">
+          Opens WhatsApp with your message ready to send.
+        </p>
       </div>
     </form>
   );

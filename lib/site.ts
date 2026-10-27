@@ -34,10 +34,15 @@ export const siteConfig = {
   ],
 } as const;
 
+/** The enquiry section at the foot of every page. */
+export const contactCopy = {
+  heading: "Let's talk about your space",
+  lede: "Tell Kathy a little about your project. The form opens WhatsApp with your message ready to send.",
+} as const;
+
 export const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/projects/", label: "Projects" },
-  { href: "/experience/", label: "Experience" },
+  { href: "/projects/", label: "Project" },
+  { href: "/experience/", label: "About" },
 ] as const;
 
 export function absoluteUrl(path = "/") {
