@@ -23,7 +23,7 @@ export default function ExperiencePage() {
         <p>{description}</p>
       </PageIntro>
 
-      <div className="container-page grid gap-16 pb-24 md:grid-cols-[2fr_1fr] md:gap-20 md:pb-32">
+      <div className="container-page grid gap-16 md:grid-cols-[2fr_1fr] md:gap-20">
         <div className="space-y-16">
           <section aria-labelledby="work-heading">
             <h2 id="work-heading" className="text-3xl">

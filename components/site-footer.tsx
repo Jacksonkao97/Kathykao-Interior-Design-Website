@@ -29,7 +29,7 @@ export function SiteFooter() {
         </div>
       </section>
 
-      <div className="page-inner caps mt-[clamp(110px,12vw,170px)] flex flex-col items-center gap-4 border-t border-border pt-10 pb-[calc(40px+env(safe-area-inset-bottom))] text-center text-muted-foreground">
+      <div className="page-inner caps mt-[clamp(80px,9vw,130px)] flex flex-col items-center gap-4 border-t border-border pt-10 pb-[max(40px,env(safe-area-inset-bottom))] text-center text-muted-foreground">
         <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-foreground">
