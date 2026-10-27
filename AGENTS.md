@@ -19,8 +19,12 @@ projects (index and one static page per project), experience (labelled
   and the apartment it shows (`apartment.ts`, plain boxes, cylinders and
   spheres in metres).
 - `lib/`: site config (`site.ts`), placeholder content (`home.ts`,
-  `projects.ts`, `experience.ts`), structured data, asset URLs and Firebase
-  setup.
+  `experience.ts`), the project loader (`projects.ts`), structured data,
+  asset URLs and Firebase setup.
+- `content/projects/`: one JSON file per project; the file name is the URL
+  slug. Kathy edits these in Pages CMS (see "Editing projects").
+- `public/images/projects/`: photos uploaded through the CMS, served at
+  `/images/projects/…`.
 - `public/placeholders/`: stand-in renders used until real photography
   exists. Referenced with site-rooted paths (`/placeholders/…`), which
   `assetUrl()` passes through unchanged.
@@ -33,9 +37,11 @@ projects (index and one static page per project), experience (labelled
   `headers()`, rewrites, redirects or ISR. Dynamic routes need
   `generateStaticParams` and `dynamicParams = false`. Metadata routes export
   `dynamic = "force-static"`.
-- `next/image` runs with `images.unoptimized`. Upload images to Firebase
-  Storage already resized, and reference them through `assetUrl()` in
-  `lib/assets.ts`.
+- `next/image` runs with `images.unoptimized`. Reference images through
+  `assetUrl()` in `lib/assets.ts`. Images uploaded to Firebase Storage must be
+  resized first; CMS photos in `public/images/projects/` are resized and
+  stripped of camera metadata in `out/` by `scripts/resize-images.mjs`
+  (`postbuild`).
 - Tailwind CSS v4. Theme tokens live in `app/globals.css` (cream paper and
   soft ink, after Norm Architects). Fonts are Jost (sans, body and caps
   labels) and Libre Caslon Text (serif). Utilities: `caps` for small
@@ -49,7 +55,7 @@ projects (index and one static page per project), experience (labelled
 
 - Order: hero slideshow, featured project, latest work, then the footer's
   contact section. Copy and slides live in `lib/home.ts`; latest work shows
-  the first six entries of `lib/projects.ts` in two rows (wide photo first,
+  the first six projects (newest year first, then `order`) in two rows (wide photo first,
   then mirrored).
 - The page `<h1>` is visually hidden; slide and section titles are `<h2>`.
 - The header is fixed. On `/` it sits over the hero (element `#hero`) in light
@@ -72,8 +78,20 @@ projects (index and one static page per project), experience (labelled
 - Enquiries go through the footer form (name, email, description), which
   opens WhatsApp via `wa.me/<NEXT_PUBLIC_WHATSAPP_NUMBER>` with the message
   filled in. There is no backend.
-- Placeholder copy is fine, but keep it in `lib/` data files, not hard-coded in
-  components.
+- Placeholder copy is fine, but keep it in `lib/` data files or `content/`,
+  not hard-coded in components.
+
+## Editing projects
+
+- Kathy edits projects at app.pagescms.org, signed in by email as a Pages CMS
+  collaborator (no GitHub account). `.pages.yml` defines the form. Saving
+  commits to `main`, which deploys the site in a few minutes.
+- `lib/projects.ts` reads `content/projects/*.json` at build time and fails
+  the build with the file name when a project is invalid, so a bad edit never
+  goes live. Import its values only in server components and metadata routes.
+- When you add a project field, add it to the `Project` type, the loader and
+  `.pages.yml` together. `settings.content.merge` keeps keys the form doesn't
+  show (such as `palette`).
 
 ## SEO
 

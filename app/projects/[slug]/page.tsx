@@ -36,6 +36,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
   const index = projects.indexOf(project);
   const next = projects[(index + 1) % projects.length];
+  const galleryCount = project.gallery.length || 3;
 
   return (
     <article>
@@ -79,12 +80,16 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
       </div>
 
       <section aria-label="Gallery" className="container-page grid gap-6 pb-20 md:grid-cols-2">
-        {[1, 2, 3].map((v) => (
+        {/* Two portrait photos, then a wide one; a photo left alone on its row
+            goes wide too. Plan artwork fills in until photos are added. */}
+        {Array.from({ length: galleryCount }, (_, i) => i + 1).map((v) => (
           <ProjectArt
             key={v}
             project={project}
             variant={v}
-            className={v === 3 ? "aspect-[16/9] md:col-span-2" : "aspect-[4/5]"}
+            className={
+              v % 3 === 0 || (v === galleryCount && v % 3 === 1) ? "aspect-[16/9] md:col-span-2" : "aspect-[4/5]"
+            }
           />
         ))}
       </section>

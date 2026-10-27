@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const project = getProject(featured.slug)!;
+  // Falls back to the newest project if the featured one is renamed or removed in the CMS.
+  const project = getProject(featured.slug) ?? projects[0];
 
   return (
     <>

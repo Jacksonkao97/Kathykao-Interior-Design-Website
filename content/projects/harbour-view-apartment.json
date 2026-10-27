@@ -1,0 +1,29 @@
+{
+  "title": "Harbour View Apartment",
+  "category": "Residential",
+  "location": "Hong Kong",
+  "year": 2025,
+  "area": "110 m²",
+  "scope": [
+    "Space planning",
+    "Joinery design",
+    "Lighting",
+    "Furniture & styling"
+  ],
+  "summary": "A compact family apartment opened up around the view, with oak joinery that hides storage for a household of four.",
+  "story": [
+    "The original layout split the flat into five small rooms that all turned their backs on the harbour. We removed two non-structural walls and organised the plan around a single long sightline from the entrance to the window.",
+    "A run of white oak joinery absorbs storage, a study nook and a fold-away dining table, so the living space stays clear day to day and expands when friends visit.",
+    "Warm limewash walls, linen and brushed brass keep the palette soft against the strong light off the water."
+  ],
+  "palette": [
+    "#EDE4D6",
+    "#C9B79C",
+    "#8A6F52",
+    "#3E4A45"
+  ],
+  "cover": "/placeholders/curtain-umber.jpg",
+  "coverAlt": "Linen curtains framing a wide opening, with an oak bench below",
+  "gallery": [],
+  "order": 1
+}

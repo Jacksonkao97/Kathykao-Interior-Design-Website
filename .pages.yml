@@ -1,0 +1,113 @@
+# Pages CMS (https://pagescms.org) setup for editing projects in the browser.
+# Saving commits to `main`, which rebuilds and deploys the site. The project
+# loader in lib/projects.ts checks these files at build time.
+
+media:
+  name: projects
+  label: Project photos
+  input: public/images/projects
+  output: /images/projects
+  rename: safe
+  extensions: [jpg, jpeg, png, webp]
+
+settings:
+  content:
+    # Keep keys the editor doesn't show, such as each project's plan palette.
+    merge: true
+  commit:
+    identity: user
+
+content:
+  - name: projects
+    label: Projects
+    type: collection
+    path: content/projects
+    format: json
+    filename:
+      template: "{primary}.json"
+      field: create
+    view:
+      fields: [title, category, location, year]
+      primary: title
+      sort: [year, title]
+      search: [title, location]
+      default:
+        sort: year
+        order: desc
+    fields:
+      - name: title
+        label: Project name
+        type: string
+        required: true
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values: [Residential, Hospitality, Commercial]
+      - name: location
+        label: Location
+        type: string
+        required: true
+        description: City, e.g. Hong Kong.
+      - name: year
+        label: Year completed
+        type: number
+        required: true
+        options:
+          min: 1990
+          max: 2100
+      - name: area
+        label: Floor area
+        type: string
+        required: true
+        description: With units, e.g. 110 m².
+      - name: scope
+        label: Scope of work
+        type: string
+        list: true
+        description: One item per line, e.g. Space planning, Joinery design.
+      - name: summary
+        label: Summary
+        type: text
+        required: true
+        description: One or two sentences. Shown on project cards and in Google results.
+        options:
+          maxlength: 300
+      - name: story
+        label: Story
+        type: text
+        list: true
+        description: The write-up on the project page, one paragraph per item.
+      - name: cover
+        label: Cover photo
+        type: image
+        description: Landscape works best. Shown on cards and at the top of the project page.
+      - name: coverAlt
+        label: Cover photo description
+        type: string
+        description: What the cover shows, for search engines and screen readers, e.g. Oak kitchen island under two pendant lamps.
+      - name: gallery
+        label: Gallery
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{alt}"
+        description: Photos further down the project page, shown two tall then one wide.
+        fields:
+          - name: image
+            label: Photo
+            type: image
+            required: true
+          - name: alt
+            label: Photo description
+            type: string
+            required: true
+            description: What the photo shows, e.g. Linen curtains drawn back from a wide window.
+      - name: order
+        label: Order within the year
+        type: number
+        description: Optional. Projects are listed newest year first; use 1, 2, 3 to order projects from the same year.
+        options:
+          min: 0

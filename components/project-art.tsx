@@ -36,8 +36,9 @@ function splitRooms(rand: () => number, rect: Rect, depth: number): Rect[] {
 }
 
 /**
- * Project imagery. Uses the real cover photo when one is set, otherwise draws
- * a coloured plan in the project's palette as a placeholder.
+ * Project imagery. Variant 0 is the cover and 1, 2, 3… the gallery photos.
+ * Uses the real photo when one is set, otherwise draws a coloured plan in the
+ * project's palette as a placeholder.
  */
 export function ProjectArt({
   project,
@@ -52,13 +53,16 @@ export function ProjectArt({
   priority?: boolean;
   sizes?: string;
 }) {
-  const photo = variant === 0 ? project.cover : project.gallery?.[variant - 1];
+  const photo =
+    variant === 0
+      ? project.cover && { image: project.cover, alt: project.coverAlt || `${project.title}, ${project.location}` }
+      : project.gallery[variant - 1];
   if (photo) {
     return (
       <div className={cn("relative overflow-hidden", className)}>
         <Image
-          src={assetUrl(photo)}
-          alt={(variant === 0 && project.coverAlt) || `${project.title}, ${project.location}`}
+          src={assetUrl(photo.image)}
+          alt={photo.alt}
           fill
           sizes={sizes}
           priority={priority}
