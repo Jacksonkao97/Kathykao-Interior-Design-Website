@@ -29,8 +29,11 @@ export function SiteFooter() {
         </div>
       </section>
 
-      <div className="page-inner caps mt-[clamp(80px,9vw,130px)] flex flex-col items-center gap-4 border-t border-border pt-10 pb-[max(40px,env(safe-area-inset-bottom))] text-center text-muted-foreground">
-        <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+      <div className="page-inner caps mt-[clamp(80px,9vw,130px)] flex flex-wrap items-center justify-between gap-x-6 gap-y-2.5 border-t border-border py-8 pb-[max(32px,env(safe-area-inset-bottom))] text-muted-foreground">
+        <p>
+          © {new Date().getFullYear()} {siteConfig.name}
+        </p>
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-foreground">
               {item.label}
@@ -43,9 +46,6 @@ export function SiteFooter() {
             LinkedIn
           </a>
         </nav>
-        <p>
-          © {new Date().getFullYear()} {siteConfig.name}
-        </p>
       </div>
     </footer>
   );
