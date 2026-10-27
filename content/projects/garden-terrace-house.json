@@ -1,0 +1,29 @@
+{
+  "title": "Garden Terrace House",
+  "category": "Residential",
+  "location": "Singapore",
+  "year": 2024,
+  "area": "260 m²",
+  "scope": [
+    "Full renovation",
+    "Kitchen design",
+    "Bespoke joinery",
+    "Landscape coordination"
+  ],
+  "summary": "A three-storey terrace house reconnected to its garden, with a kitchen that becomes the heart of the home.",
+  "story": [
+    "The ground floor now runs uninterrupted from the street to the garden. Full-height sliding doors let the kitchen and dining area spill outside.",
+    "Upstairs, bedrooms are kept simple and restful, with built-in wardrobes faced in fluted timber and tall windows that frame the trees.",
+    "Natural ventilation guided the plan, so the house stays cool with far less air conditioning."
+  ],
+  "palette": [
+    "#ECE7DC",
+    "#A7B29A",
+    "#5F6E55",
+    "#2E332B"
+  ],
+  "cover": "/placeholders/sofa-warm-p.jpg",
+  "coverAlt": "Low linen sofa and floor lamp",
+  "gallery": [],
+  "order": 2
+}

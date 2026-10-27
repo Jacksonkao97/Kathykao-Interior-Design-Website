@@ -1,0 +1,28 @@
+{
+  "title": "Sai Kung Guesthouse",
+  "category": "Hospitality",
+  "location": "Hong Kong",
+  "year": 2024,
+  "area": "240 m²",
+  "scope": [
+    "Concept design",
+    "Furniture",
+    "Styling"
+  ],
+  "summary": "Six guest rooms by the sea, each with a bed, a chair, a lamp and a view.",
+  "story": [
+    "The owners wanted a guesthouse that felt like staying with friends. Each room has the same few pieces, chosen well, so the view does the rest.",
+    "Lime-washed walls, linen and woven grass soften the salt air, and every room has a deep sill to sit on.",
+    "A shared kitchen and long table on the ground floor gives guests a reason to meet."
+  ],
+  "palette": [
+    "#E8E6DD",
+    "#B7BBA8",
+    "#6F7663",
+    "#30352E"
+  ],
+  "cover": "/placeholders/bed-sage-p.jpg",
+  "coverAlt": "Bedroom with linen bedding and a bedside lamp in soft green-grey light",
+  "gallery": [],
+  "order": 3
+}

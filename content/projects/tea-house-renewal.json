@@ -1,0 +1,29 @@
+{
+  "title": "Tea House Renewal",
+  "category": "Hospitality",
+  "location": "Taipei",
+  "year": 2024,
+  "area": "180 m²",
+  "scope": [
+    "Concept design",
+    "Material selection",
+    "Custom furniture",
+    "Site coordination"
+  ],
+  "summary": "A 1970s shophouse reworked into a quiet tea room with a courtyard of light at its centre.",
+  "story": [
+    "The brief asked for calm in the middle of a busy street. We pulled the seating back from the facade and cut a light well into the middle of the plan so every table looks onto greenery.",
+    "Reclaimed cypress, hand-trowelled plaster and terrazzo made with local stone tie the space to its neighbourhood.",
+    "Lighting is kept low and indirect, layered so the room shifts gently from bright mornings to warm evenings."
+  ],
+  "palette": [
+    "#E9E1D3",
+    "#B9A88A",
+    "#6E5B45",
+    "#2F3B33"
+  ],
+  "cover": "/placeholders/niche-grey.jpg",
+  "coverAlt": "Ceramic vessels resting in a deep plaster niche",
+  "gallery": [],
+  "order": 1
+}

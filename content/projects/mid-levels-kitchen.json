@@ -1,0 +1,28 @@
+{
+  "title": "Mid-Levels Kitchen",
+  "category": "Residential",
+  "location": "Hong Kong",
+  "year": 2025,
+  "area": "18 m²",
+  "scope": [
+    "Kitchen design",
+    "Joinery",
+    "Lighting"
+  ],
+  "summary": "A small galley kitchen rebuilt in pale oak and honed stone, with everything stored out of sight.",
+  "story": [
+    "The old kitchen was a narrow corridor with cupboards on every wall. We kept the footprint but moved the sink under the window and ran a single line of tall storage along the back.",
+    "Pale oak fronts with no handles keep the room quiet, while a honed stone worktop wraps up the wall as a splashback.",
+    "Two paper pendants and a strip of light under the shelves make it a calm place to cook at night."
+  ],
+  "palette": [
+    "#EFE8DC",
+    "#D2C0A4",
+    "#9C805F",
+    "#3F3A33"
+  ],
+  "cover": "/placeholders/kitchen-warm-p.jpg",
+  "coverAlt": "Pale oak kitchen island under two pendant lamps",
+  "gallery": [],
+  "order": 2
+}
