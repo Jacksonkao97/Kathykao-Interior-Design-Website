@@ -31,24 +31,28 @@ export default function HomePage() {
             alt={`White clay study model of the ${project.title}, seen from above`}
             label={`3D clay model of the ${project.title}. Drag to turn it.`}
           />
-          <p className="caps text-muted-foreground">{featured.modelLabel} · drag to turn</p>
-          <h3 className="title-caps mt-12">{project.title}</h3>
-          <p className="mt-[18px] max-w-[62ch]">{featured.summary}</p>
-          <p className="caps mt-[18px] text-muted-foreground">
-            {project.category} · {project.location} · {project.year}
+          <p data-reveal className="caps text-muted-foreground">
+            {featured.modelLabel} · drag to turn
           </p>
-          <Link
-            href={`/projects/${project.slug}/`}
-            className="caps mt-[30px] border-b border-current pb-[3px] transition-opacity hover:opacity-60"
-          >
-            View project
-          </Link>
+          <div data-reveal className="grid justify-items-center">
+            <h3 className="title-caps mt-12">{project.title}</h3>
+            <p className="mt-[18px] max-w-[62ch]">{featured.summary}</p>
+            <p className="caps mt-[18px] text-muted-foreground">
+              {project.category} · {project.location} · {project.year}
+            </p>
+            <Link
+              href={`/projects/${project.slug}/`}
+              className="caps mt-[30px] border-b border-current pb-[3px] transition-opacity hover:opacity-60"
+            >
+              View project
+            </Link>
+          </div>
         </div>
       </HomeSection>
 
       <HomeSection id="latest" title="Latest work" sideLabel="Recent">
         <LatestWork projects={projects.slice(0, 6)} />
-        <p className="mt-16 text-center">
+        <p data-reveal className="mt-16 text-center">
           <Link href="/projects/" className="caps border-b border-current pb-[3px] transition-opacity hover:opacity-60">
             All projects
           </Link>

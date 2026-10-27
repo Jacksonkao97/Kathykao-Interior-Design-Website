@@ -41,7 +41,7 @@ export const contactCopy = {
 } as const;
 
 export const navItems = [
-  { href: "/projects/", label: "Project" },
+  { href: "/projects/", label: "Projects" },
   { href: "/experience/", label: "About" },
 ] as const;
 

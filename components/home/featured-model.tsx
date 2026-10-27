@@ -7,7 +7,9 @@ import { useEffect, useRef, useState } from "react";
 import { assetUrl } from "@/lib/assets";
 import { cn } from "@/lib/utils";
 
-const ClayModel = dynamic(() => import("@/components/three/clay-model"), { ssr: false });
+const ClayModel = dynamic(() => import("@/components/three/clay-model"), {
+  ssr: false,
+});
 
 function hasWebGL() {
   try {
@@ -53,7 +55,11 @@ export function FeaturedModel({ still, alt, label }: { still: string; alt: strin
   }, []);
 
   return (
-    <div ref={ref} className="relative aspect-square w-full max-w-[1100px] min-[900px]:aspect-video min-[900px]:max-h-[64vh]">
+    <div
+      ref={ref}
+      data-reveal
+      className="relative aspect-square w-full max-w-[1100px] min-[900px]:aspect-video min-[900px]:max-h-[64vh]"
+    >
       <Image
         src={assetUrl(still)}
         alt={alt}

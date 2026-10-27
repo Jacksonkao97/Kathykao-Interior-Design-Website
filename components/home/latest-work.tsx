@@ -28,10 +28,17 @@ export function LatestWork({ projects }: { projects: Project[] }) {
             {row.map((project, i) => {
               const wide = i === wideIndex;
               return (
-                <div key={project.slug} className={cn("min-w-0", wide && "-order-1 col-span-full min-[900px]:order-none min-[900px]:col-span-1")}>
+                <div
+                  key={project.slug}
+                  className={cn(
+                    "min-w-0",
+                    wide && "-order-1 col-span-full min-[900px]:order-none min-[900px]:col-span-1",
+                  )}
+                >
                   <ProjectCard
                     project={project}
                     sizes={wide ? WIDE : NARROW}
+                    revealDelay={i * 140}
                     artClassName="aspect-[4/5] min-[900px]:aspect-auto min-[900px]:h-[clamp(220px,29.3vw,440px)]"
                   />
                 </div>
