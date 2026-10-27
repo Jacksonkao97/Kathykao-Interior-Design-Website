@@ -14,15 +14,22 @@ export function ProjectCard({
   artClassName = "aspect-[4/3]",
   sizes,
   headingLevel: Heading = "h3",
+  revealDelay = 0,
 }: {
   project: Project;
   priority?: boolean;
   artClassName?: string;
   sizes?: string;
   headingLevel?: "h2" | "h3";
+  /** Milliseconds to wait before fading in, to stagger a row. */
+  revealDelay?: number;
 }) {
   return (
-    <article className="group min-w-0">
+    <article
+      data-reveal
+      style={{ "--reveal-delay": `${revealDelay}ms` } as React.CSSProperties}
+      className="group min-w-0"
+    >
       <Link href={`/projects/${project.slug}/`} className="block">
         <div className="relative">
           <ProjectArt project={project} priority={priority} sizes={sizes} className={cn("bg-muted", artClassName)} />

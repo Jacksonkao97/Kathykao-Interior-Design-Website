@@ -9,9 +9,9 @@ export function SiteFooter() {
       <section
         id="contact"
         aria-labelledby="contact-heading"
-        className="page-inner grid scroll-mt-20 gap-7 pt-[clamp(80px,9vw,130px)] min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] min-[900px]:gap-12"
+        className="page-inner grid scroll-mt-20 gap-7 pt-[clamp(80px,9vw,130px)] min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] min-[900px]:items-center min-[900px]:gap-12"
       >
-        <div>
+        <div data-reveal>
           <h2 id="contact-heading" className="text-[clamp(26px,2.4vw,34px)] leading-[1.25]">
             {contactCopy.heading}
           </h2>
@@ -24,10 +24,12 @@ export function SiteFooter() {
             {siteConfig.location.city}, working across {siteConfig.areaServed.slice(1).join(" & ")}
           </p>
         </div>
-        <ContactForm />
+        <div data-reveal style={{ "--reveal-delay": "140ms" } as React.CSSProperties}>
+          <ContactForm />
+        </div>
       </section>
 
-      <div className="page-inner caps mt-[clamp(110px,12vw,170px)] flex flex-wrap justify-between gap-x-6 gap-y-2.5 border-t border-border pt-7 pb-[calc(48px+env(safe-area-inset-bottom))] text-muted-foreground">
+      <div className="page-inner caps mt-[clamp(80px,9vw,130px)] flex flex-wrap items-center justify-between gap-x-6 gap-y-2.5 border-t border-border py-8 pb-[max(32px,env(safe-area-inset-bottom))] text-muted-foreground">
         <p>
           © {new Date().getFullYear()} {siteConfig.name}
         </p>

@@ -60,6 +60,12 @@ projects (index and one static page per project), experience (labelled
   slowly and can be dragged; it stops turning for reduced motion. Don't use
   drei helpers that download assets at runtime (for example `Environment`
   presets).
+- The model turns under a fixed sun (the group rotates, not the camera), so
+  shadows sweep through the rooms. Parts carry a `tone` that picks one of a
+  few clay materials.
+- Scroll fades: add `data-reveal` to an element and `<ScrollFades>` (in the
+  root layout) fades it in on entering the screen and out on leaving. Set
+  `--reveal-delay` to stagger a row. Don't put it on the hero.
 - Mutating three.js objects inside `useFrame` is intended.
   `react-hooks/immutability` is turned off only for `components/three/**`.
 - Shadows use `shadows="percentage"`, because three r18x removed

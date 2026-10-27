@@ -23,7 +23,7 @@ export default function ProjectsPage() {
       <PageIntro eyebrow="Portfolio" title="Spaces shaped around the people who use them.">
         <p>{description}</p>
       </PageIntro>
-      <section aria-label="Projects" className="container-page pb-24 md:pb-32">
+      <section aria-label="Projects" className="container-page">
         <div className="grid gap-16 md:grid-cols-2 md:gap-x-10 md:gap-y-20">
           {projects.map((project, i) => (
             <ProjectCard key={project.slug} project={project} priority={i < 2} />

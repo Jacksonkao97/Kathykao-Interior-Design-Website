@@ -33,7 +33,7 @@ export function HomeSection({
     <section id={id} aria-labelledby={`${id}-heading`} className="relative scroll-mt-16 pt-[clamp(80px,9vw,130px)]">
       <SideLabel word={sideLabel} side="left" />
       <SideLabel word={sideLabel} side="right" />
-      <h2 id={`${id}-heading`} className="title-caps mb-[clamp(48px,6vw,84px)] text-center">
+      <h2 data-reveal id={`${id}-heading`} className="title-caps mb-[clamp(48px,6vw,84px)] text-center">
         {title}
       </h2>
       <div className="page-inner">{children}</div>
