@@ -38,7 +38,7 @@ export default function ExperiencePage() {
                     <p className="text-muted-foreground">
                       {job.company} · {job.location}
                     </p>
-                    <ul className="mt-4 list-disc space-y-2 pl-5 marker:text-accent">
+                    <ul className="mt-4 list-disc space-y-2 pl-5 marker:text-muted-foreground">
                       {job.points.map((point) => (
                         <li key={point}>{point}</li>
                       ))}
@@ -75,7 +75,7 @@ export default function ExperiencePage() {
               </h2>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {items.map((skill) => (
-                  <li key={skill} className="rounded-full border border-border px-3 py-1 text-sm">
+                  <li key={skill} className="border border-border px-3 py-1 text-sm">
                     {skill}
                   </li>
                 ))}

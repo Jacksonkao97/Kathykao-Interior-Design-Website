@@ -44,11 +44,13 @@ export function ProjectArt({
   className,
   variant = 0,
   priority = false,
+  sizes = "(min-width: 768px) 50vw, 100vw",
 }: {
   project: Project;
   className?: string;
   variant?: number;
   priority?: boolean;
+  sizes?: string;
 }) {
   const photo = variant === 0 ? project.cover : project.gallery?.[variant - 1];
   if (photo) {
@@ -56,9 +58,9 @@ export function ProjectArt({
       <div className={cn("relative overflow-hidden", className)}>
         <Image
           src={assetUrl(photo)}
-          alt={`${project.title}, ${project.location}`}
+          alt={(variant === 0 && project.coverAlt) || `${project.title}, ${project.location}`}
           fill
-          sizes="(min-width: 768px) 50vw, 100vw"
+          sizes={sizes}
           priority={priority}
           className="object-cover"
         />
