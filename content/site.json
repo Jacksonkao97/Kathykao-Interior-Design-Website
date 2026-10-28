@@ -1,11 +1,20 @@
 {
-  "email": "hello@kathykao.design",
-  "whatsappNumber": "85200000000",
-  "city": "Hong Kong",
-  "countryCode": "HK",
-  "otherAreas": ["Taipei", "Singapore"],
+  "email": "Kathy99kao@gmail.com",
+  "whatsappNumber": "6587535681",
+  "city": "Malaysia",
+  "countryCode": "MY",
+  "otherAreas": [
+    "Malaysia",
+    "Singapore"
+  ],
   "social": [
-    { "platform": "Instagram", "url": "https://www.instagram.com/" },
-    { "platform": "LinkedIn", "url": "https://www.linkedin.com/" }
+    {
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/kthyk.design?mdxt=MXJvemNvaG85ajMweA=="
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://www.linkedin.com/in/kathy-kao-5993a6183"
+    }
   ]
 }
