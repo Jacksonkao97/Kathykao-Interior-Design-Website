@@ -19,13 +19,15 @@ projects (index and one static page per project), experience (labelled
   the study apartment it shows by default (`apartment.ts`, plain boxes,
   cylinders and spheres in metres) and the code that turns the apartment or
   an uploaded .glb into merged clay meshes (`clay-geometry.ts`).
-- `lib/`: site config (`site.ts`), placeholder content (`home.ts`,
-  `experience.ts`), the project loader (`projects.ts`), structured data,
+- `lib/`: site config (`site.ts`), placeholder home copy (`home.ts`), the
+  project and About loaders (`projects.ts`, `experience.ts`), structured data,
   asset URLs and Firebase setup.
 - `content/projects/`: one JSON file per project; the file name is the URL
   slug. Kathy edits these in Pages CMS (see "Editing content").
 - `content/site.json`: contact details, social links and the featured
   project, also edited in the CMS.
+- `content/about.json`: the About page (`/experience/`): headline, intro, bio,
+  experience, education, skills and awards, also edited in the CMS.
 - `public/images/projects/`: photos uploaded through the CMS, served at
   `/images/projects/…`. `public/models/projects/`: .glb models uploaded
   through the CMS, served at `/models/projects/…`.
@@ -105,7 +107,7 @@ projects (index and one static page per project), experience (labelled
 
 ## Editing content
 
-- Kathy edits projects and site settings at app.pagescms.org, signed in by email as a Pages CMS
+- Kathy edits projects, site settings and the About page at app.pagescms.org, signed in by email as a Pages CMS
   collaborator (no GitHub account). `.pages.yml` defines the form. Saving
   commits to `main`, which deploys the site in a few minutes.
 - `lib/projects.ts` reads `content/projects/*.json` at build time and fails
@@ -122,6 +124,8 @@ projects (index and one static page per project), experience (labelled
   so it must not import `lib/projects.ts`.
 - A project's `model` must be a .glb that exists under `public/` and is under
   30 MB, or the build fails. The CMS form asks for under 15 MB.
+- `content/about.json` feeds `lib/experience.ts`, which drops half-filled
+  rows; the About page hides empty sections.
 
 ## SEO
 

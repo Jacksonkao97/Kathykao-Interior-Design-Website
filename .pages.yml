@@ -1,7 +1,8 @@
-# Pages CMS (https://pagescms.org) setup for editing projects and site
-# settings in the browser.
+# Pages CMS (https://pagescms.org) setup for editing projects, site settings
+# and the About page in the browser.
 # Saving commits to `main`, which rebuilds and deploys the site. The
-# loaders in lib/projects.ts and lib/site.ts check these files at build time.
+# loaders in lib/projects.ts, lib/site.ts and lib/experience.ts check these
+# files at build time.
 
 media:
   - name: projects
@@ -203,3 +204,112 @@ content:
             pattern:
               regex: "^https://"
               message: Paste the full link, starting with https://
+
+  - name: about
+    label: About page
+    type: file
+    path: content/about.json
+    format: json
+    fields:
+      - name: headline
+        label: Headline
+        type: string
+        required: true
+        description: The large title at the top of the page.
+      - name: intro
+        label: Intro
+        type: text
+        required: true
+        description: One or two sentences under the headline. Also shown in Google results.
+        options:
+          maxlength: 300
+      - name: bio
+        label: About Kathy
+        type: text
+        list: true
+        description: Optional. A longer introduction, one paragraph per item.
+      - name: experience
+        label: Experience
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{role}, {company}"
+        description: Newest first. Drag to reorder.
+        fields:
+          - name: role
+            label: Role
+            type: string
+            required: true
+          - name: company
+            label: Company
+            type: string
+            required: true
+          - name: location
+            label: Location
+            type: string
+          - name: period
+            label: Dates
+            type: string
+            required: true
+            description: e.g. 2021 — Present
+          - name: points
+            label: What you did
+            type: text
+            list: true
+            description: One point per item.
+      - name: education
+        label: Education
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{qualification}"
+        fields:
+          - name: qualification
+            label: Qualification
+            type: string
+            required: true
+          - name: school
+            label: School
+            type: string
+            required: true
+          - name: period
+            label: Dates
+            type: string
+            description: e.g. 2010 — 2014
+      - name: skills
+        label: Skills
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{group}"
+        description: Groups shown down the side, e.g. Design, Software. The first group is also given to search engines as your main skills.
+        fields:
+          - name: group
+            label: Group name
+            type: string
+            required: true
+          - name: items
+            label: Skills
+            type: string
+            list: true
+      - name: recognition
+        label: Awards and press
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: year
+            label: Year
+            type: number
+            options:
+              min: 1990
+              max: 2100
