@@ -22,7 +22,9 @@ projects (index and one static page per project), experience (labelled
   `experience.ts`), the project loader (`projects.ts`), structured data,
   asset URLs and Firebase setup.
 - `content/projects/`: one JSON file per project; the file name is the URL
-  slug. Kathy edits these in Pages CMS (see "Editing projects").
+  slug. Kathy edits these in Pages CMS (see "Editing content").
+- `content/site.json`: contact details and social links, also edited in the
+  CMS.
 - `public/images/projects/`: photos uploaded through the CMS, served at
   `/images/projects/…`.
 - `public/placeholders/`: stand-in renders used until real photography
@@ -82,14 +84,14 @@ projects (index and one static page per project), experience (labelled
 
 - **Never show prices** anywhere on the site.
 - Enquiries go through the footer form (name, email, description), which
-  opens WhatsApp via `wa.me/<NEXT_PUBLIC_WHATSAPP_NUMBER>` with the message
-  filled in. There is no backend.
+  opens WhatsApp via `wa.me/<whatsappNumber>` with the message filled in.
+  There is no backend.
 - Placeholder copy is fine, but keep it in `lib/` data files or `content/`,
   not hard-coded in components.
 
-## Editing projects
+## Editing content
 
-- Kathy edits projects at app.pagescms.org, signed in by email as a Pages CMS
+- Kathy edits projects and site settings at app.pagescms.org, signed in by email as a Pages CMS
   collaborator (no GitHub account). `.pages.yml` defines the form. Saving
   commits to `main`, which deploys the site in a few minutes.
 - `lib/projects.ts` reads `content/projects/*.json` at build time and fails
@@ -98,6 +100,9 @@ projects (index and one static page per project), experience (labelled
 - When you add a project field, add it to the `Project` type, the loader and
   `.pages.yml` together. `settings.content.merge` keeps keys the form doesn't
   show (such as `palette`).
+- `content/site.json` holds the contact details: email, WhatsApp number,
+  city, other areas served and social links. `lib/site.ts` imports it into
+  `siteConfig` and checks it at build time; the footer hides empty links.
 
 ## SEO
 

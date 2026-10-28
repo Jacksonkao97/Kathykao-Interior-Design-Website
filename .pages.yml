@@ -1,6 +1,7 @@
-# Pages CMS (https://pagescms.org) setup for editing projects in the browser.
-# Saving commits to `main`, which rebuilds and deploys the site. The project
-# loader in lib/projects.ts checks these files at build time.
+# Pages CMS (https://pagescms.org) setup for editing projects and site
+# settings in the browser.
+# Saving commits to `main`, which rebuilds and deploys the site. The
+# loaders in lib/projects.ts and lib/site.ts check these files at build time.
 
 media:
   name: projects
@@ -111,3 +112,61 @@ content:
         description: Optional. Projects are listed newest year first; use 1, 2, 3 to order projects from the same year.
         options:
           min: 0
+
+  - name: site
+    label: Site settings
+    type: file
+    path: content/site.json
+    format: json
+    fields:
+      - name: email
+        label: Email
+        type: string
+        required: true
+        pattern:
+          regex: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+          message: Enter an email address, e.g. hello@kathykao.design
+      - name: whatsappNumber
+        label: WhatsApp number
+        type: string
+        required: true
+        description: The contact form sends enquiries here. Country code first, digits only, no + or spaces, e.g. 85291234567.
+        pattern:
+          regex: "^[1-9][0-9]{6,14}$"
+          message: Digits only, starting with the country code, e.g. 85291234567
+      - name: city
+        label: Home city
+        type: string
+        required: true
+      - name: countryCode
+        label: Country code
+        type: string
+        required: true
+        description: Two capital letters, e.g. HK. Used by search engines.
+        pattern:
+          regex: "^[A-Z]{2}$"
+          message: Two capital letters, e.g. HK
+      - name: otherAreas
+        label: Other places you work
+        type: string
+        list: true
+        description: Shown in the footer as "working across …".
+      - name: social
+        label: Social links
+        type: object
+        list: true
+        description: Shown in the footer in this order. Remove a row to hide it.
+        fields:
+          - name: platform
+            label: Platform
+            type: select
+            required: true
+            options:
+              values: [Instagram, LinkedIn, Pinterest, Facebook, Xiaohongshu, Houzz, YouTube, Behance]
+          - name: url
+            label: Link
+            type: string
+            required: true
+            pattern:
+              regex: "^https://"
+              message: Paste the full link, starting with https://

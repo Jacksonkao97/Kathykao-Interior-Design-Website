@@ -1,5 +1,45 @@
-// Central site configuration. Placeholder values are marked with TODO and
-// can be overridden through environment variables (see .env.example).
+import siteSettings from "@/content/site.json";
+
+// Central site configuration. Contact details and social links come from
+// content/site.json, which Kathy edits as "Site settings" in Pages CMS
+// (.pages.yml); the rest can be overridden through environment variables
+// (see .env.example).
+
+export type SocialLink = { platform: string; url: string };
+
+type SiteSettings = {
+  email: string;
+  whatsappNumber: string;
+  city: string;
+  countryCode: string;
+  otherAreas?: string[];
+  social?: SocialLink[];
+};
+
+// Typed by hand: TypeScript would otherwise infer the type from whatever the
+// file holds today (an emptied list becomes never[]).
+const settings = siteSettings as unknown as SiteSettings;
+
+// The CMS checks these fields too, but a hand edit can slip through, so fail
+// the build with a clear message instead of publishing a broken link.
+function checkSettings() {
+  const fail = (problem: string): never => {
+    throw new Error(`content/site.json: ${problem}`);
+  };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(settings.email)) fail(`"email" is not an email address`);
+  if (!/^[1-9]\d{6,14}$/.test(settings.whatsappNumber)) {
+    fail(`"whatsappNumber" must be digits only, with the country code and no + or spaces`);
+  }
+  if (!settings.city?.trim()) fail(`"city" is missing`);
+  if (!/^[A-Z]{2}$/.test(settings.countryCode)) fail(`"countryCode" must be two capital letters, e.g. HK`);
+  const social: SocialLink[] = (settings.social ?? []).filter((link) => link?.url?.trim());
+  for (const link of social) {
+    if (!/^https:\/\//.test(link.url)) fail(`the ${link.platform} link must start with https://`);
+  }
+  return social;
+}
+
+const social = checkSettings();
 
 export const siteConfig = {
   name: "Kathy Kao Interior Design",
@@ -10,18 +50,15 @@ export const siteConfig = {
     "Kathy Kao is an interior designer creating calm, considered residential and hospitality spaces, from the first floor plan sketch to the finished room.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://kathykao-personal-website.web.app").replace(/\/$/, ""),
   locale: "en_US",
-  // TODO: replace with the real details.
-  email: "hello@kathykao.design",
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "85200000000",
+  email: settings.email,
+  whatsappNumber: settings.whatsappNumber,
   location: {
-    city: "Hong Kong",
-    country: "HK",
+    city: settings.city,
+    country: settings.countryCode,
   },
-  areaServed: ["Hong Kong", "Taipei", "Singapore"],
-  social: {
-    instagram: "https://www.instagram.com/",
-    linkedin: "https://www.linkedin.com/",
-  },
+  /** The home city first, then the other places Kathy works. */
+  areaServed: [settings.city, ...(settings.otherAreas ?? []).filter((area) => area.trim())],
+  social,
   keywords: [
     "interior designer",
     "interior design",
