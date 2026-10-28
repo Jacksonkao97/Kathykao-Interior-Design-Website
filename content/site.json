@@ -1,0 +1,11 @@
+{
+  "email": "hello@kathykao.design",
+  "whatsappNumber": "85200000000",
+  "city": "Hong Kong",
+  "countryCode": "HK",
+  "otherAreas": ["Taipei", "Singapore"],
+  "social": [
+    { "platform": "Instagram", "url": "https://www.instagram.com/" },
+    { "platform": "LinkedIn", "url": "https://www.linkedin.com/" }
+  ]
+}

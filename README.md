@@ -48,7 +48,7 @@ The Firebase project is `kathykao-personal-website`. Upload project photos under
 
 ## Contact
 
-The footer form on every page validates name, email and message, then opens WhatsApp (`wa.me`) with the enquiry filled in. Set `NEXT_PUBLIC_WHATSAPP_NUMBER` to the real number.
+The footer form on every page validates name, email and message, then opens WhatsApp (`wa.me`) with the enquiry filled in. The WhatsApp number, email, social links and service areas live in `content/site.json`, edited as **Site settings** in Pages CMS.
 
 ## Deploy
 
@@ -57,7 +57,7 @@ Merging to `main` deploys automatically: `.github/workflows/firebase-hosting-mer
 The workflows need, under **Settings > Secrets and variables > Actions**:
 
 - Secret `FIREBASE_SERVICE_ACCOUNT_KATHYKAO_PERSONAL_WEBSITE`: JSON key of a service account with the Firebase Hosting Admin, Firebase Authentication Admin and API Keys Viewer roles.
-- Variables with the same names as in `.env.example` (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_FIREBASE_*`, optional `NEXT_PUBLIC_ASSET_BASE_URL`). They are baked into the static build.
+- Variables with the same names as in `.env.example` (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_FIREBASE_*`, optional `NEXT_PUBLIC_ASSET_BASE_URL`). They are baked into the static build.
 
 To deploy by hand instead:
 

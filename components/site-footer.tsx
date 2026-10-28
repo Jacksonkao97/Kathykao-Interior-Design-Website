@@ -21,7 +21,8 @@ export function SiteFooter() {
               {siteConfig.email}
             </a>
             <br />
-            {siteConfig.location.city}, working across {siteConfig.areaServed.slice(1).join(" & ")}
+            {siteConfig.location.city}
+            {siteConfig.areaServed.length > 1 && `, working across ${siteConfig.areaServed.slice(1).join(" & ")}`}
           </p>
         </div>
         <div data-reveal style={{ "--reveal-delay": "140ms" } as React.CSSProperties}>
@@ -39,12 +40,11 @@ export function SiteFooter() {
               {item.label}
             </Link>
           ))}
-          <a href={siteConfig.social.instagram} rel="me noopener" target="_blank" className="hover:text-foreground">
-            Instagram
-          </a>
-          <a href={siteConfig.social.linkedin} rel="me noopener" target="_blank" className="hover:text-foreground">
-            LinkedIn
-          </a>
+          {siteConfig.social.map((link) => (
+            <a key={link.url} href={link.url} rel="me noopener" target="_blank" className="hover:text-foreground">
+              {link.platform}
+            </a>
+          ))}
         </nav>
       </div>
     </footer>

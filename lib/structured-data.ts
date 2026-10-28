@@ -23,7 +23,7 @@ export function businessSchema() {
         areaServed: siteConfig.areaServed,
         founder: { "@id": personId },
         knowsAbout: ["Interior design", "Space planning", "3D visualisation", "Joinery design", "Lighting design"],
-        sameAs: Object.values(siteConfig.social),
+        sameAs: siteConfig.social.map((link) => link.url),
       },
       {
         "@type": "Person",
@@ -32,7 +32,7 @@ export function businessSchema() {
         jobTitle: "Interior Designer",
         url: siteConfig.url,
         worksFor: { "@id": businessId },
-        sameAs: Object.values(siteConfig.social),
+        sameAs: siteConfig.social.map((link) => link.url),
       },
       {
         "@type": "WebSite",
