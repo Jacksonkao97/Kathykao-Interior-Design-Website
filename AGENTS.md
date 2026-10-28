@@ -18,13 +18,15 @@ projects (index and one static page per project), experience (labelled
 - `components/three/`: the React Three Fiber clay model (`clay-model.tsx`)
   and the apartment it shows (`apartment.ts`, plain boxes, cylinders and
   spheres in metres).
-- `lib/`: site config (`site.ts`), placeholder content (`home.ts`,
-  `experience.ts`), the project loader (`projects.ts`), structured data,
+- `lib/`: site config (`site.ts`), placeholder home copy (`home.ts`), the
+  project and About loaders (`projects.ts`, `experience.ts`), structured data,
   asset URLs and Firebase setup.
 - `content/projects/`: one JSON file per project; the file name is the URL
   slug. Kathy edits these in Pages CMS (see "Editing content").
 - `content/site.json`: contact details and social links, also edited in the
   CMS.
+- `content/about.json`: the About page (`/experience/`): headline, intro, bio,
+  experience, education, skills and awards, also edited in the CMS.
 - `public/images/projects/`: photos uploaded through the CMS, served at
   `/images/projects/…`.
 - `public/placeholders/`: stand-in renders used until real photography
@@ -91,7 +93,7 @@ projects (index and one static page per project), experience (labelled
 
 ## Editing content
 
-- Kathy edits projects and site settings at app.pagescms.org, signed in by email as a Pages CMS
+- Kathy edits projects, site settings and the About page at app.pagescms.org, signed in by email as a Pages CMS
   collaborator (no GitHub account). `.pages.yml` defines the form. Saving
   commits to `main`, which deploys the site in a few minutes.
 - `lib/projects.ts` reads `content/projects/*.json` at build time and fails
@@ -103,6 +105,8 @@ projects (index and one static page per project), experience (labelled
 - `content/site.json` holds the contact details: email, WhatsApp number,
   city, other areas served and social links. `lib/site.ts` imports it into
   `siteConfig` and checks it at build time; the footer hides empty links.
+- `content/about.json` feeds `lib/experience.ts`, which drops half-filled
+  rows; the About page hides empty sections.
 
 ## SEO
 
