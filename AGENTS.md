@@ -162,6 +162,9 @@ to its image itself. The site description in search results comes from
   `.env.local` for local work. CI reads them from the repo's Actions variables.
 - GitHub Actions deploy PR previews and merges to `main`
   (`.github/workflows/`).
+- Google Analytics 4 (`components/analytics.tsx`, gtag via `next/script`)
+  loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, which only the
+  merge-to-`main` workflow does, so previews and local work aren't counted.
 
 ## Checks
 

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Jost, Libre_Caslon_Text } from "next/font/google";
 
+import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
 import { ScrollFades } from "@/components/scroll-fades";
 import { SiteFooter } from "@/components/site-footer";
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteFooter />
         <ScrollFades />
         <JsonLd data={businessSchema()} />
+        <Analytics />
       </body>
     </html>
   );
