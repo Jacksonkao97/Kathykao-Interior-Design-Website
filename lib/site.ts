@@ -17,6 +17,8 @@ type SiteSettings = {
   /** The project on the home page, as the CMS stores it: content/projects/<slug>.json. */
   featuredProject?: string;
   featuredText?: string;
+  /** The home page description in search results and link previews. */
+  description?: string;
 };
 
 // Typed by hand: TypeScript would otherwise infer the type from whatever the
@@ -44,13 +46,18 @@ function checkSettings() {
 
 const social = checkSettings();
 
+const DEFAULT_DESCRIPTION =
+  "Kathy Kao is an interior designer creating calm, considered residential and hospitality spaces, from the first floor plan sketch to the finished room.";
+
 export const siteConfig = {
   name: "Kathy Kao Interior Design",
   shortName: "Kathy Kao",
   designer: "Kathy Kao",
-  title: "Kathy Kao — Interior Designer",
-  description:
-    "Kathy Kao is an interior designer creating calm, considered residential and hospitality spaces, from the first floor plan sketch to the finished room.",
+  /** The home page title; naming the city helps local searches. */
+  title: `Kathy Kao — Interior Designer in ${settings.city}`,
+  description: settings.description?.trim() || DEFAULT_DESCRIPTION,
+  /** The line under the name on the share image. */
+  tagline: "From paper plan to finished room.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://kathykao-personal-website.web.app").replace(/\/$/, ""),
   locale: "en_US",
   email: settings.email,
@@ -60,7 +67,7 @@ export const siteConfig = {
     country: settings.countryCode,
   },
   /** The home city first, then the other places Kathy works. */
-  areaServed: [settings.city, ...(settings.otherAreas ?? []).filter((area) => area.trim())],
+  areaServed: [...new Set([settings.city, ...(settings.otherAreas ?? []).map((area) => area.trim())])].filter(Boolean),
   social,
   /** The project shown as a clay model on the home page; app/page.tsx falls back to the newest. */
   featured: {

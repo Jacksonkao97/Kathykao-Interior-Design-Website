@@ -153,6 +153,14 @@ content:
         description: Optional. Shown under the model; leave empty to use the project's summary.
         options:
           maxlength: 300
+      - name: description
+        label: Search description
+        type: text
+        description: >-
+          Optional. One or two sentences about your work, shown under the site's name in Google results and when
+          someone shares the home page. Leave empty to use the standard text.
+        options:
+          maxlength: 200
       - name: email
         label: Email
         type: string

@@ -6,17 +6,17 @@ import { HeroSlideshow } from "@/components/home/hero-slideshow";
 import { HomeSection } from "@/components/home/home-section";
 import { LatestWork } from "@/components/home/latest-work";
 import { featuredModel, heroSlides } from "@/lib/home";
-import { getProject, projects } from "@/lib/projects";
+import { featuredProject as project, projects } from "@/lib/projects";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: { absolute: siteConfig.title },
-  alternates: { canonical: "/" },
-};
+  description: siteConfig.description,
+  path: "/",
+});
 
 export default function HomePage() {
-  // Falls back to the newest project if the featured one is renamed or removed in the CMS.
-  const project = (siteConfig.featured.slug && getProject(siteConfig.featured.slug)) || projects[0];
   // An uploaded model shows over the project's cover photo; without one, the
   // study apartment shows over its own clay render.
   const model = project.model
@@ -37,7 +37,7 @@ export default function HomePage() {
             still={model.still}
             alt={
               model.url
-                ? (project.coverAlt ?? `${project.title}, ${project.location}`)
+                ? (project.coverAlt ?? project.title)
                 : `White clay study model of the ${project.title}, seen from above`
             }
             label={`3D clay model of the ${project.title}. Drag to turn it.`}

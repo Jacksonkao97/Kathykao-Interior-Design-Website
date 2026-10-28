@@ -55,7 +55,7 @@ export function ProjectArt({
 }) {
   const photo =
     variant === 0
-      ? project.cover && { image: project.cover, alt: project.coverAlt || `${project.title}, ${project.location}` }
+      ? project.cover && { image: project.cover, alt: project.coverAlt ?? project.title }
       : project.gallery[variant - 1];
   if (photo) {
     return (

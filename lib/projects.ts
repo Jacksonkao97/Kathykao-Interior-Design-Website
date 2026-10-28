@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { siteConfig } from "@/lib/site";
+
 // Portfolio projects, one JSON file per project in content/projects/. Kathy
 // edits them through Pages CMS (.pages.yml), which commits to `main`; the
 // file name is the project's URL slug. Read at build time only, so import
@@ -34,7 +36,7 @@ export type Project = {
   story: string[];
   palette: [string, string, string, string];
   cover?: string;
-  /** Describes what the cover shows, for its alt text. */
+  /** Describes what the cover shows, for its alt text. Set whenever there is a cover. */
   coverAlt?: string;
   gallery: GalleryImage[];
   /** A .glb 3D model, site-rooted, e.g. /models/projects/harbour-view.glb. */
@@ -86,11 +88,13 @@ function readProject(file: string): Project {
 
   const palette = Array.isArray(data.palette) && data.palette.length === 4 ? data.palette : DEFAULT_PALETTE;
   const cover = isText(data.cover) ? data.cover : undefined;
+  // Used when a photo has no description, so it never goes without alt text.
+  const fallbackAlt = `${data.title}, ${data.category.toLowerCase()} interior by ${siteConfig.designer} in ${data.location}`;
   const gallery: GalleryImage[] = (Array.isArray(data.gallery) ? data.gallery : [])
     .filter((item: Partial<GalleryImage> | null) => isText(item?.image))
     .map((item: Partial<GalleryImage>) => ({
       image: item.image!,
-      alt: isText(item.alt) ? item.alt : `${data.title}, ${data.location}`,
+      alt: isText(item.alt) ? item.alt : fallbackAlt,
     }));
 
   return {
@@ -105,7 +109,7 @@ function readProject(file: string): Project {
     story: textList(data.story),
     palette,
     cover,
-    coverAlt: cover && isText(data.coverAlt) ? data.coverAlt : undefined,
+    coverAlt: cover && (isText(data.coverAlt) ? data.coverAlt : fallbackAlt),
     gallery,
     model,
     order: typeof data.order === "number" ? data.order : undefined,
@@ -127,3 +131,7 @@ export const projects: Project[] = fs
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
 }
+
+/** The project on the home page, picked in Site settings; the newest if it was renamed or removed. */
+export const featuredProject: Project =
+  (siteConfig.featured.slug && getProject(siteConfig.featured.slug)) || projects[0];

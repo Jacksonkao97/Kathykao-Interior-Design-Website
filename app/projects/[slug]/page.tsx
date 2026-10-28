@@ -6,8 +6,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { JsonLd } from "@/components/json-ld";
 import { ProjectArt } from "@/components/project-art";
 import { getProject, projects } from "@/lib/projects";
+import { defaultShareImage, pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
-import { breadcrumbSchema, personId } from "@/lib/structured-data";
+import { absoluteAssetUrl, breadcrumbSchema, personId, websiteId } from "@/lib/structured-data";
 
 // Every project page is generated at build time; unknown slugs 404.
 export const dynamicParams = false;
@@ -20,13 +21,18 @@ export async function generateMetadata({ params }: PageProps<"/projects/[slug]">
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  const title = `${project.title}, ${project.location}`;
-  return {
-    title,
+  return pageMetadata({
+    title: `${project.title}, ${project.location}`,
     description: project.summary,
-    alternates: { canonical: `/projects/${project.slug}/` },
-    openGraph: { type: "article", title, description: project.summary, url: `/projects/${project.slug}/` },
-  };
+    path: `/projects/${project.slug}/`,
+    type: "article",
+    // Drawn by ./opengraph-image.tsx.
+    image: {
+      ...defaultShareImage,
+      url: `/projects/${project.slug}/opengraph-image`,
+      alt: project.coverAlt ?? `${project.title}, ${project.location}`,
+    },
+  });
 }
 
 export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
@@ -111,11 +117,15 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           name: project.title,
           description: project.summary,
           url: absoluteUrl(`/projects/${project.slug}/`),
+          ...(project.cover && {
+            image: [project.cover, ...project.gallery.map((photo) => photo.image)].map(absoluteAssetUrl),
+          }),
           dateCreated: String(project.year),
           locationCreated: { "@type": "Place", name: project.location },
           genre: `${project.category} interior design`,
           keywords: project.scope.join(", "),
           creator: { "@id": personId },
+          isPartOf: { "@id": websiteId },
         }}
       />
       <JsonLd

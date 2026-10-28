@@ -28,7 +28,7 @@
         ]
       },
       {
-        "source": "/opengraph-image",
+        "source": "**/opengraph-image",
         "headers": [
           {
             "key": "Content-Type",
