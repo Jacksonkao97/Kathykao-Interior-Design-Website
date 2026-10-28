@@ -41,11 +41,13 @@ export const heroSlides: HeroSlide[] = [
   },
 ];
 
-/** The project shown as a turning clay model in the second section. */
-export const featured = {
-  slug: "harbour-view-apartment",
-  modelLabel: "Study model 1:50",
-  modelStill: "/placeholders/model-clay.jpg",
-  summary:
-    "A family flat opened up around the view. Every room was modelled before anything was built, so the family could walk through their new home months before moving in.",
+/**
+ * The featured project's clay model. Kathy picks the project in Site settings
+ * (content/site.json); a project with a .glb uploaded shows that model, and
+ * one without shows the hand-built study apartment and its still render.
+ */
+export const featuredModel = {
+  studyLabel: "Study model 1:50",
+  studyStill: "/placeholders/model-clay.jpg",
+  uploadedLabel: "3D model",
 };

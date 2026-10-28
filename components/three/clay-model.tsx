@@ -1,11 +1,14 @@
 "use client";
 
-import { RoundedBoxGeometry } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
-import { APARTMENT, type Part, type Tone } from "./apartment";
+import type { Tone } from "./apartment";
+import { apartmentGeometry, type ClayGeometry, sceneGeometry } from "./clay-geometry";
 
 const TURN_SPEED = 0.06; // radians per second when nobody is dragging
 const DRAG_SPEED = 0.008; // radians per pixel dragged
@@ -24,34 +27,6 @@ const TONES: Record<Tone, THREE.MeshStandardMaterialParameters> = {
   },
   leaf: { color: "#c3c7ae", roughness: 1 },
 };
-
-function Piece({ part, material }: { part: Part; material: THREE.Material }) {
-  const glass = part.tone === "glass";
-  return (
-    <mesh
-      position={part.position}
-      rotation={part.rotation}
-      material={material}
-      castShadow={!glass}
-      receiveShadow={!glass}
-    >
-      {part.shape === "box" &&
-        (part.round ? (
-          <RoundedBoxGeometry
-            args={part.size}
-            radius={Math.min(part.round, Math.min(...part.size) / 2 - 0.001)}
-            smoothness={3}
-          />
-        ) : (
-          <boxGeometry args={part.size} />
-        ))}
-      {part.shape === "cylinder" && (
-        <cylinderGeometry args={[part.radiusTop ?? part.radius, part.radius, part.height, 32]} />
-      )}
-      {part.shape === "sphere" && <icosahedronGeometry args={[part.radius, 3]} />}
-    </mesh>
-  );
-}
 
 /**
  * Turns the model under a fixed sun, so shadows sweep across the rooms as
@@ -109,30 +84,116 @@ function Turntable({ still, children }: { still: boolean; children: React.ReactN
   return <group ref={group}>{children}</group>;
 }
 
-/** Clay-and-card study model of the featured apartment. */
+/** Loads an uploaded .glb as clay, or builds the study apartment when there is none. */
+function useClayGeometry(modelUrl: string | undefined, onError?: () => void) {
+  const [loaded, setLoaded] = useState<{ url: string; geometry: ClayGeometry } | null>(null);
+  const apartment = useMemo(() => (modelUrl ? null : apartmentGeometry()), [modelUrl]);
+  useEffect(() => {
+    if (!modelUrl) return;
+    let cancelled = false;
+    // The bundler copies three's Draco decoder into the build, so nothing
+    // loads from another site.
+    const draco = new DRACOLoader();
+    const loader = new GLTFLoader()
+      .setDRACOLoader(draco)
+      .setMeshoptDecoder(MeshoptDecoder)
+      // Clay has no textures, so skip decoding them: photo textures are
+      // often most of a model's memory, which phones run short of. The loader
+      // treats a null texture as no texture.
+      .register(() => ({
+        name: "clay_skip_textures",
+        loadTexture: () => Promise.resolve(null as unknown as THREE.Texture),
+      }));
+    loader
+      .loadAsync(modelUrl)
+      .then((gltf) => {
+        const geometry = sceneGeometry(gltf.scene);
+        gltf.scene.traverse((object) => (object as THREE.Mesh).geometry?.dispose());
+        if (cancelled) Object.values(geometry).forEach((g) => g.dispose());
+        else setLoaded({ url: modelUrl, geometry });
+      })
+      .catch((error) => {
+        console.error(`Could not show the 3D model ${modelUrl}`, error);
+        if (!cancelled) onError?.();
+      })
+      .finally(() => draco.dispose());
+    return () => {
+      cancelled = true;
+    };
+  }, [modelUrl, onError]);
+
+  const geometry = apartment ?? (loaded && loaded.url === modelUrl ? loaded.geometry : null);
+  useEffect(() => () => Object.values(geometry ?? {}).forEach((g) => g.dispose()), [geometry]);
+  return geometry;
+}
+
+function Model({
+  geometry,
+  materials,
+  onReady,
+}: {
+  geometry: ClayGeometry;
+  materials: Record<Tone, THREE.Material>;
+  onReady?: () => void;
+}) {
+  useEffect(() => onReady?.(), [onReady]);
+  return (
+    <>
+      {(Object.entries(geometry) as [Tone, THREE.BufferGeometry][]).map(([tone, g]) => (
+        <mesh
+          key={tone}
+          geometry={g}
+          material={materials[tone]}
+          castShadow={tone !== "glass"}
+          receiveShadow={tone !== "glass"}
+        />
+      ))}
+    </>
+  );
+}
+
+/**
+ * Clay-and-card study model of the featured project: the .glb uploaded for
+ * it in the CMS, or the hand-built study apartment. `onError` fires when the
+ * model can't load or the browser drops the WebGL context, so the page can
+ * fall back to the still image.
+ */
 export default function ClayModel({
   active,
   still,
+  modelUrl,
   onReady,
+  onError,
 }: {
   active: boolean;
   still: boolean;
+  modelUrl?: string;
   onReady?: () => void;
+  onError?: () => void;
 }) {
   const materials = useMemo(() => {
     const byTone = {} as Record<Tone, THREE.Material>;
     for (const tone of Object.keys(TONES) as Tone[]) byTone[tone] = new THREE.MeshStandardMaterial(TONES[tone]);
     return byTone;
   }, []);
+  const geometry = useClayGeometry(modelUrl, onError);
+  // Phones get a lighter canvas and shadow map; they drop the WebGL context
+  // (and the model with it) when a page uses too much GPU memory.
+  const small = Math.min(window.screen.width, window.screen.height) < 768;
 
   return (
     <Canvas
       shadows="percentage"
-      dpr={[1, 2]}
+      dpr={[1, small ? 1.5 : 2]}
       frameloop={active ? "always" : "never"}
       camera={{ fov: 28, near: 0.1, far: 100, position: [0, 17, 19] }}
-      gl={{ antialias: true, alpha: true }}
-      onCreated={() => onReady?.()}
+      gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}
+      onCreated={({ gl }) =>
+        gl.domElement.addEventListener("webglcontextlost", (event) => {
+          event.preventDefault();
+          onError?.();
+        })
+      }
       style={{ touchAction: "pan-y", cursor: "grab" }}
       aria-hidden
     >
@@ -142,10 +203,10 @@ export default function ClayModel({
         intensity={8}
         color="#fff1e0"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={small ? [1024, 1024] : [2048, 2048]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
-        shadow-radius={5}
+        shadow-radius={small ? 3 : 5}
         shadow-camera-left={-9}
         shadow-camera-right={9}
         shadow-camera-top={9}
@@ -156,9 +217,7 @@ export default function ClayModel({
       {/* Cool fill from the other side so shaded walls keep some form. */}
       <directionalLight position={[7, 6, -6]} intensity={0.9} color="#e8eef5" />
       <Turntable still={still}>
-        {APARTMENT.map((part, i) => (
-          <Piece key={i} part={part} material={materials[part.tone]} />
-        ))}
+        {geometry && <Model geometry={geometry} materials={materials} onReady={onReady} />}
       </Turntable>
       <mesh rotation-x={-Math.PI / 2} position-y={-0.1} receiveShadow>
         <planeGeometry args={[60, 60]} />
