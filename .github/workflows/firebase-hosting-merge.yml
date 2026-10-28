@@ -35,6 +35,8 @@ jobs:
       - name: Build
         env:
           VARS: ${{ toJSON(vars) }}
+          # Google Analytics 4, on the live site only (components/analytics.tsx).
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: G-NGJDFH2WRZ
         run: |
           eval "$(jq -r 'to_entries[] | select(.key | startswith("NEXT_PUBLIC_")) | select(.value != "") | "export \(.key)=\(.value | @sh)"' <<<"$VARS")"
           npm run build
