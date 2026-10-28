@@ -4,12 +4,18 @@
 # loaders in lib/projects.ts and lib/site.ts check these files at build time.
 
 media:
-  name: projects
-  label: Project photos
-  input: public/images/projects
-  output: /images/projects
-  rename: safe
-  extensions: [jpg, jpeg, png, webp]
+  - name: projects
+    label: Project photos
+    input: public/images/projects
+    output: /images/projects
+    rename: safe
+    extensions: [jpg, jpeg, png, webp]
+  - name: models
+    label: 3D models
+    input: public/models/projects
+    output: /models/projects
+    rename: safe
+    extensions: [glb]
 
 settings:
   content:
@@ -84,6 +90,8 @@ content:
         label: Cover photo
         type: image
         description: Landscape works best. Shown on cards and at the top of the project page.
+        options:
+          media: projects
       - name: coverAlt
         label: Cover photo description
         type: string
@@ -101,11 +109,22 @@ content:
             label: Photo
             type: image
             required: true
+            options:
+              media: projects
           - name: alt
             label: Photo description
             type: string
             required: true
             description: What the photo shows, e.g. Linen curtains drawn back from a wide window.
+      - name: model
+        label: 3D model
+        type: file
+        description: >-
+          Optional. A .glb file, shown on the home page in white clay when this is the featured project
+          (colours and textures are left out). Export it as glTF Binary (.glb), with compression on
+          if your software offers it, and keep it under 15 MB so it loads quickly on phones.
+        options:
+          media: models
       - name: order
         label: Order within the year
         type: number
@@ -119,6 +138,20 @@ content:
     path: content/site.json
     format: json
     fields:
+      - name: featuredProject
+        label: Featured project
+        type: reference
+        description: Shown on the home page as a turning 3D model. Upload the model on the project itself.
+        options:
+          collection: projects
+          search: title
+          label: "{title}"
+      - name: featuredText
+        label: Featured project text
+        type: text
+        description: Optional. Shown under the model; leave empty to use the project's summary.
+        options:
+          maxlength: 300
       - name: email
         label: Email
         type: string

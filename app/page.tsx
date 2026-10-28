@@ -5,7 +5,7 @@ import { FeaturedModel } from "@/components/home/featured-model";
 import { HeroSlideshow } from "@/components/home/hero-slideshow";
 import { HomeSection } from "@/components/home/home-section";
 import { LatestWork } from "@/components/home/latest-work";
-import { featured, heroSlides } from "@/lib/home";
+import { featuredModel, heroSlides } from "@/lib/home";
 import { getProject, projects } from "@/lib/projects";
 import { siteConfig } from "@/lib/site";
 
@@ -16,7 +16,12 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   // Falls back to the newest project if the featured one is renamed or removed in the CMS.
-  const project = getProject(featured.slug) ?? projects[0];
+  const project = (siteConfig.featured.slug && getProject(siteConfig.featured.slug)) || projects[0];
+  // An uploaded model shows over the project's cover photo; without one, the
+  // study apartment shows over its own clay render.
+  const model = project.model
+    ? { url: project.model, still: project.cover, label: featuredModel.uploadedLabel }
+    : { url: undefined, still: featuredModel.studyStill, label: featuredModel.studyLabel };
 
   return (
     <>
@@ -28,16 +33,21 @@ export default function HomePage() {
       <HomeSection id="featured" title="Featured project" sideLabel="Featured">
         <div className="grid justify-items-center text-center">
           <FeaturedModel
-            still={featured.modelStill}
-            alt={`White clay study model of the ${project.title}, seen from above`}
+            modelUrl={model.url}
+            still={model.still}
+            alt={
+              model.url
+                ? (project.coverAlt ?? `${project.title}, ${project.location}`)
+                : `White clay study model of the ${project.title}, seen from above`
+            }
             label={`3D clay model of the ${project.title}. Drag to turn it.`}
           />
           <p data-reveal className="caps text-muted-foreground">
-            {featured.modelLabel} · drag to turn
+            {model.label} · drag to turn
           </p>
           <div data-reveal className="grid justify-items-center">
             <h3 className="title-caps mt-12">{project.title}</h3>
-            <p className="mt-[18px] max-w-[62ch]">{featured.summary}</p>
+            <p className="mt-[18px] max-w-[62ch]">{siteConfig.featured.text ?? project.summary}</p>
             <p className="caps mt-[18px] text-muted-foreground">
               {project.category} · {project.location} · {project.year}
             </p>

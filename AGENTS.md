@@ -15,18 +15,20 @@ projects (index and one static page per project), experience (labelled
   registry may be unreachable). Follow the shadcn "new-york" style.
 - `components/home/`: home page sections (hero slideshow, featured model,
   latest work, section frame with side labels).
-- `components/three/`: the React Three Fiber clay model (`clay-model.tsx`)
-  and the apartment it shows (`apartment.ts`, plain boxes, cylinders and
-  spheres in metres).
+- `components/three/`: the React Three Fiber clay model (`clay-model.tsx`),
+  the study apartment it shows by default (`apartment.ts`, plain boxes,
+  cylinders and spheres in metres) and the code that turns the apartment or
+  an uploaded .glb into merged clay meshes (`clay-geometry.ts`).
 - `lib/`: site config (`site.ts`), placeholder content (`home.ts`,
   `experience.ts`), the project loader (`projects.ts`), structured data,
   asset URLs and Firebase setup.
 - `content/projects/`: one JSON file per project; the file name is the URL
   slug. Kathy edits these in Pages CMS (see "Editing content").
-- `content/site.json`: contact details and social links, also edited in the
-  CMS.
+- `content/site.json`: contact details, social links and the featured
+  project, also edited in the CMS.
 - `public/images/projects/`: photos uploaded through the CMS, served at
-  `/images/projects/…`.
+  `/images/projects/…`. `public/models/projects/`: .glb models uploaded
+  through the CMS, served at `/models/projects/…`.
 - `public/placeholders/`: stand-in renders used until real photography
   exists. Referenced with site-rooted paths (`/placeholders/…`), which
   `assetUrl()` passes through unchanged.
@@ -68,9 +70,21 @@ projects (index and one static page per project), experience (labelled
   slowly and can be dragged; it stops turning for reduced motion. Don't use
   drei helpers that download assets at runtime (for example `Environment`
   presets).
+- The featured project is picked in Site settings. If it has a `model`
+  (.glb), that model shows in clay over the project's cover photo; otherwise
+  the study apartment shows over `/placeholders/model-clay.jpg`. Uploaded
+  models are centred, set on the ground and scaled to the apartment's
+  footprint; their materials map to clay tones by colour and their textures
+  are never decoded. Draco and meshopt models load with decoders the bundler
+  copies into the build.
 - The model turns under a fixed sun (the group rotates, not the camera), so
   shadows sweep through the rooms. Parts carry a `tone` that picks one of a
   few clay materials.
+- Phones drop the WebGL context when a page uses too much GPU memory, which
+  used to leave a blank box. Keep the model light: draw one merged mesh per
+  tone (never a mesh per part), and keep the phone limits in `ClayModel`
+  (pixel ratio 1.5, 1024 shadow map). If the context is lost or the canvas
+  throws, `FeaturedModel` removes it and shows the still image again.
 - Scroll fades: add `data-reveal` to an element and `<ScrollFades>` (in the
   root layout) fades it in on entering the screen and out on leaving. Set
   `--reveal-delay` to stagger a row. Don't put it on the hero.
@@ -101,8 +115,13 @@ projects (index and one static page per project), experience (labelled
   `.pages.yml` together. `settings.content.merge` keeps keys the form doesn't
   show (such as `palette`).
 - `content/site.json` holds the contact details: email, WhatsApp number,
-  city, other areas served and social links. `lib/site.ts` imports it into
-  `siteConfig` and checks it at build time; the footer hides empty links.
+  city, other areas served and social links, plus `featuredProject` (stored
+  by the CMS as `content/projects/<slug>.json`) and optional `featuredText`.
+  `lib/site.ts` imports it into `siteConfig` and checks it at build time; the
+  footer hides empty links. `lib/site.ts` is also used by client components,
+  so it must not import `lib/projects.ts`.
+- A project's `model` must be a .glb that exists under `public/` and is under
+  30 MB, or the build fails. The CMS form asks for under 15 MB.
 
 ## SEO
 

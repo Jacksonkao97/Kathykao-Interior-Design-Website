@@ -15,6 +15,8 @@ type Piece = { geometry: THREE.BufferGeometry; matrix: THREE.Matrix4; tone: Tone
 
 /** Longest side of the footprint, in metres, that every model is scaled to. */
 const FOOTPRINT = 10.5;
+/** Tallest a model may stand after scaling, so tall buildings stay in frame. */
+const MAX_HEIGHT = 6;
 
 function floats(attribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute) {
   // getX/Y/Z unpack interleaved and quantized data that the merge can't use.
@@ -121,7 +123,7 @@ export function sceneGeometry(scene: THREE.Object3D): ClayGeometry {
     box.union(geometry.boundingBox!);
   }
   const size = box.getSize(new THREE.Vector3());
-  const scale = FOOTPRINT / Math.max(size.x, size.z, 1e-6);
+  const scale = Math.min(FOOTPRINT / Math.max(size.x, size.z, 1e-6), MAX_HEIGHT / Math.max(size.y, 1e-6));
   const centre = box.getCenter(new THREE.Vector3());
   const fit = new THREE.Matrix4()
     .makeScale(scale, scale, scale)

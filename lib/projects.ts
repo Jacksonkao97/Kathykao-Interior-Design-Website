@@ -11,6 +11,8 @@ import path from "node:path";
 // the CMS live in public/images/projects/ and are resized after the build
 // (scripts/resize-images.mjs). Covers under /placeholders/ are stand-in
 // renders; without a cover, pages draw plan artwork in the project palette.
+// `model` is a .glb uploaded to public/models/projects/, shown in white clay
+// on the home page when the project is featured.
 
 export const categories = ["Residential", "Hospitality", "Commercial"] as const;
 
@@ -35,11 +37,18 @@ export type Project = {
   /** Describes what the cover shows, for its alt text. */
   coverAlt?: string;
   gallery: GalleryImage[];
+  /** A .glb 3D model, site-rooted, e.g. /models/projects/harbour-view.glb. */
+  model?: string;
   /** Orders projects from the same year; lower comes first. */
   order?: number;
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content/projects");
+const PUBLIC_DIR = path.join(process.cwd(), "public");
+
+// Bigger models take too long to download on a phone and can run it out of
+// memory. The CMS form suggests 15 MB.
+const MAX_MODEL_MB = 30;
 
 // Plan artwork colours for projects that don't set their own.
 const DEFAULT_PALETTE: Project["palette"] = ["#ECE6DB", "#C8B9A2", "#8C7860", "#3A3631"];
@@ -66,6 +75,15 @@ function readProject(file: string): Project {
   if (!categories.includes(data.category)) fail(`"category" must be one of ${categories.join(", ")}`);
   if (!Number.isInteger(data.year)) fail(`"year" must be a whole number`);
 
+  const model = isText(data.model) ? (data.model.startsWith("/") ? data.model : `/${data.model}`) : undefined;
+  if (model) {
+    if (!model.toLowerCase().endsWith(".glb")) fail(`"model" must be a .glb file`);
+    const file = path.join(PUBLIC_DIR, decodeURIComponent(model));
+    if (!fs.existsSync(file)) fail(`the model ${model} is not in public/`);
+    const mb = fs.statSync(file).size / 1024 / 1024;
+    if (mb > MAX_MODEL_MB) fail(`the model ${model} is ${mb.toFixed(0)} MB; keep it under ${MAX_MODEL_MB} MB`);
+  }
+
   const palette = Array.isArray(data.palette) && data.palette.length === 4 ? data.palette : DEFAULT_PALETTE;
   const cover = isText(data.cover) ? data.cover : undefined;
   const gallery: GalleryImage[] = (Array.isArray(data.gallery) ? data.gallery : [])
@@ -89,6 +107,7 @@ function readProject(file: string): Project {
     cover,
     coverAlt: cover && isText(data.coverAlt) ? data.coverAlt : undefined,
     gallery,
+    model,
     order: typeof data.order === "number" ? data.order : undefined,
   };
 }

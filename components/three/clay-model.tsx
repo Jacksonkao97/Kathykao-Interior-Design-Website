@@ -91,8 +91,9 @@ function useClayGeometry(modelUrl: string | undefined, onError?: () => void) {
   useEffect(() => {
     if (!modelUrl) return;
     let cancelled = false;
-    // The Draco decoder is served from /draco/ so nothing loads from another site.
-    const draco = new DRACOLoader().setDecoderPath("/draco/").setDecoderConfig({ type: "wasm" });
+    // The bundler copies three's Draco decoder into the build, so nothing
+    // loads from another site.
+    const draco = new DRACOLoader();
     const loader = new GLTFLoader()
       .setDRACOLoader(draco)
       .setMeshoptDecoder(MeshoptDecoder)

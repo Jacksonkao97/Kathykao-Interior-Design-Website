@@ -47,7 +47,8 @@ export function FeaturedModel({
   label,
   modelUrl,
 }: {
-  still: string;
+  /** Shown until the model is ready, and instead of it when 3D can't run. */
+  still?: string;
   alt: string;
   label: string;
   /** A .glb uploaded for the project; without one the study apartment shows. */
@@ -90,13 +91,15 @@ export function FeaturedModel({
       data-reveal
       className="relative aspect-square w-full max-w-[1100px] min-[900px]:aspect-video min-[900px]:max-h-[64vh]"
     >
-      <Image
-        src={assetUrl(still)}
-        alt={alt}
-        fill
-        sizes="(min-width: 1254px) 1100px, 100vw"
-        className={cn("object-contain transition-opacity duration-700", ready && !failed && "opacity-0")}
-      />
+      {still && (
+        <Image
+          src={assetUrl(still)}
+          alt={alt}
+          fill
+          sizes="(min-width: 1254px) 1100px, 100vw"
+          className={cn("object-contain transition-opacity duration-700", ready && !failed && "opacity-0")}
+        />
+      )}
       {mount && !failed && (
         <div
           role="img"
@@ -104,7 +107,13 @@ export function FeaturedModel({
           className={cn("absolute inset-0 transition-opacity duration-700", ready ? "opacity-100" : "opacity-0")}
         >
           <ModelBoundary onError={onError}>
-            <ClayModel active={visible} still={reduceMotion} modelUrl={modelUrl} onReady={onReady} onError={onError} />
+            <ClayModel
+              active={visible}
+              still={reduceMotion}
+              modelUrl={modelUrl && assetUrl(modelUrl)}
+              onReady={onReady}
+              onError={onError}
+            />
           </ModelBoundary>
         </div>
       )}

@@ -16,5 +16,7 @@
       "platform": "LinkedIn",
       "url": "https://www.linkedin.com/in/kathy-kao-5993a6183"
     }
-  ]
+  ],
+  "featuredProject": "content/projects/harbour-view-apartment.json",
+  "featuredText": "A family flat opened up around the view. Every room was modelled before anything was built, so the family could walk through their new home months before moving in."
 }

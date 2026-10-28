@@ -14,6 +14,9 @@ type SiteSettings = {
   countryCode: string;
   otherAreas?: string[];
   social?: SocialLink[];
+  /** The project on the home page, as the CMS stores it: content/projects/<slug>.json. */
+  featuredProject?: string;
+  featuredText?: string;
 };
 
 // Typed by hand: TypeScript would otherwise infer the type from whatever the
@@ -59,6 +62,12 @@ export const siteConfig = {
   /** The home city first, then the other places Kathy works. */
   areaServed: [settings.city, ...(settings.otherAreas ?? []).filter((area) => area.trim())],
   social,
+  /** The project shown as a clay model on the home page; app/page.tsx falls back to the newest. */
+  featured: {
+    slug: settings.featuredProject?.replace(/^.*\//, "").replace(/\.json$/, "") || undefined,
+    /** Replaces the project summary under the model when set. */
+    text: settings.featuredText?.trim() || undefined,
+  },
   keywords: [
     "interior designer",
     "interior design",
