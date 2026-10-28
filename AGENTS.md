@@ -10,7 +10,12 @@ projects (index and one static page per project), experience (labelled
 - The Next.js project lives at the **repo root**: `app/`, `components/`, `lib/`,
   `package.json`. Do not add a `src/` folder or nest the app in a subfolder.
 - `app/`: routes plus the metadata routes (`sitemap.ts`, `robots.ts`,
-  `manifest.ts`, `opengraph-image.tsx`).
+  `manifest.ts`, `opengraph-image.tsx` and one per project under
+  `projects/[slug]/`) and the icons (`favicon.ico`, `icon.svg`,
+  `apple-icon.png`; the manifest's app icons are in `public/icons/`).
+  `scripts/make-icons.mjs` (`npm run icons`) draws all the icons.
+- `assets/fonts/`: Libre Caslon Text and Jost as .woff, for the share images
+  (`lib/og.ts`) and the icons. Not served on the site.
 - `components/ui/`: shadcn/ui components, written by hand (the shadcn CLI
   registry may be unreachable). Follow the shadcn "new-york" style.
 - `components/home/`: home page sections (hero slideshow, featured model,
@@ -130,13 +135,22 @@ projects (index and one static page per project), experience (labelled
 ## SEO
 
 SEO is a top priority. For every new page:
-- Export `metadata` or `generateMetadata` with a title, description and a
-  canonical URL (`alternates.canonical`, with a trailing slash).
+- Export `metadata` or `generateMetadata` built with `pageMetadata()` from
+  `lib/seo.ts`: title, description, canonical URL (with a trailing slash),
+  Open Graph and X tags. Next merges metadata shallowly, so a page that sets
+  `openGraph` by hand loses the site name and share image.
 - Add JSON-LD with `<JsonLd>` (see `lib/structured-data.ts`), including a
   `BreadcrumbList`.
 - Add the route to `app/sitemap.ts`.
 - Use one `<h1>` per page and semantic landmarks, and give every image meaningful alt
   text.
+
+Share images are drawn at build time with `next/og` in the site's fonts. The
+home one sits beside the featured project's cover; a project's sits beside its
+own cover, so CMS edits show in link previews. A segment's opengraph-image file
+does not override a page's own `openGraph.images`, so the project page links
+to its image itself. The site description in search results comes from
+"Search description" in Site settings when Kathy fills it in.
 
 ## Firebase
 

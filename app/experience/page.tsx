@@ -3,17 +3,18 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { PageIntro } from "@/components/page-intro";
 import { about, education, experience, recognition, skills } from "@/lib/experience";
+import { pageMetadata } from "@/lib/seo";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import { breadcrumbSchema, personId } from "@/lib/structured-data";
 
-const description = about.intro;
-
-export const metadata: Metadata = {
-  title: "Experience",
-  description,
-  alternates: { canonical: "/experience/" },
-  openGraph: { type: "profile", title: `${siteConfig.designer} — Experience`, description, url: "/experience/" },
-};
+// Labelled "About" in the navigation.
+export const metadata: Metadata = pageMetadata({
+  title: `About ${siteConfig.designer}`,
+  socialTitle: `About ${siteConfig.designer}, interior designer`,
+  description: about.intro,
+  path: "/experience/",
+  type: "profile",
+});
 
 export default function ExperiencePage() {
   return (
@@ -134,7 +135,7 @@ export default function ExperiencePage() {
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
-          { name: "Experience", path: "/experience/" },
+          { name: "About", path: "/experience/" },
         ])}
       />
     </>

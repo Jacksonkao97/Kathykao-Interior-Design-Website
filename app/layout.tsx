@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 import { ScrollFades } from "@/components/scroll-fades";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { businessSchema } from "@/lib/structured-data";
 import "./globals.css";
@@ -24,35 +25,19 @@ const caslon = Libre_Caslon_Text({
 });
 
 export const metadata: Metadata = {
+  ...pageMetadata({
+    title: { default: siteConfig.title, template: `%s | ${siteConfig.name}` },
+    description: siteConfig.description,
+    path: "/",
+  }),
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.shortName} Interior Design`,
-  },
-  description: siteConfig.description,
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.designer, url: siteConfig.url }],
   creator: siteConfig.designer,
   keywords: [...siteConfig.keywords],
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: siteConfig.locale,
-    siteName: siteConfig.name,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    url: "/",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
-  },
+  appleWebApp: { title: siteConfig.shortName },
+  // Pages are indexed by default; this lets search show large photo previews.
+  robots: { "max-image-preview": "large" },
   formatDetection: { telephone: false },
 };
 

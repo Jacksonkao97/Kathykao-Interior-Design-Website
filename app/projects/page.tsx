@@ -4,18 +4,19 @@ import { JsonLd } from "@/components/json-ld";
 import { PageIntro } from "@/components/page-intro";
 import { ProjectCard } from "@/components/project-card";
 import { projects } from "@/lib/projects";
-import { absoluteUrl } from "@/lib/site";
-import { breadcrumbSchema } from "@/lib/structured-data";
+import { pageMetadata } from "@/lib/seo";
+import { absoluteUrl, siteConfig } from "@/lib/site";
+import { breadcrumbSchema, personId, websiteId } from "@/lib/structured-data";
 
 const description =
   "Residential, hospitality and workplace interiors by Kathy Kao, from compact city apartments to garden houses and tea rooms.";
 
-export const metadata: Metadata = {
-  title: "Projects",
+export const metadata: Metadata = pageMetadata({
+  title: "Interior Design Projects",
+  socialTitle: `Interior design projects by ${siteConfig.designer}`,
   description,
-  alternates: { canonical: "/projects/" },
-  openGraph: { title: "Interior Design Projects", description, url: "/projects/" },
-};
+  path: "/projects/",
+});
 
 export default function ProjectsPage() {
   return (
@@ -37,11 +38,17 @@ export default function ProjectsPage() {
           name: "Interior Design Projects",
           description,
           url: absoluteUrl("/projects/"),
-          hasPart: projects.map((p) => ({
-            "@type": "CreativeWork",
-            name: p.title,
-            url: absoluteUrl(`/projects/${p.slug}/`),
-          })),
+          isPartOf: { "@id": websiteId },
+          author: { "@id": personId },
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: projects.map((p, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: absoluteUrl(`/projects/${p.slug}/`),
+              name: p.title,
+            })),
+          },
         }}
       />
       <JsonLd

@@ -9,10 +9,18 @@ export default function manifest(): MetadataRoute.Manifest {
     name: siteConfig.name,
     short_name: siteConfig.shortName,
     description: siteConfig.description,
+    id: "/",
     start_url: "/",
+    lang: "en",
+    categories: ["design", "lifestyle"],
     display: "standalone",
     background_color: "#f5f1e5",
     theme_color: "#f5f1e5",
-    icons: [{ src: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
+    // Drawn by scripts/make-icons.mjs.
+    icons: [
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+    ],
   };
 }

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+
+// Next marks this page noindex itself.
+export const metadata: Metadata = {
+  title: "Page not found",
+  alternates: { canonical: null },
+};
 
 export default function NotFound() {
   return (
