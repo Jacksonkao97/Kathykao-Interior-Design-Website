@@ -40,20 +40,26 @@ export function ProjectCard({
             View
           </span>
         </div>
-        <Heading className="title-caps mt-7 min-[900px]:mt-10">{project.title}</Heading>
+        {/* Narrow cards on small phones can't fit a long word at full tracking. */}
+        <Heading className="title-caps mt-7 [overflow-wrap:anywhere] max-[559px]:tracking-[0.24em] min-[900px]:mt-10">
+          {project.title}
+        </Heading>
         <p className="mt-[18px] line-clamp-5 max-w-[62ch] min-[900px]:line-clamp-none">{project.summary}</p>
-        <p className="caps mt-[18px] text-muted-foreground">
-          {project.category}
-          <span className="px-2.5" aria-hidden>
-            |
-          </span>
-          <span className="sr-only">, </span>
-          {project.location}
-          <span className="px-2.5" aria-hidden>
-            |
-          </span>
-          <span className="sr-only">, </span>
-          {project.year}
+        {/* Each detail stays whole, so the line wraps between them in narrow cards. */}
+        <p className="caps mt-[18px] flex flex-wrap text-muted-foreground">
+          {[project.category, project.location, project.year].map((detail, i) => (
+            <span key={i} className="whitespace-nowrap">
+              {i > 0 && (
+                <>
+                  <span className="px-2.5" aria-hidden>
+                    |
+                  </span>
+                  <span className="sr-only">, </span>
+                </>
+              )}
+              {detail}
+            </span>
+          ))}
         </p>
       </Link>
     </article>
