@@ -48,6 +48,8 @@ projects (index and one static page per project), experience (labelled
   letter-spaced labels, `title-caps` for bold serif titles, `page-inner` for
   the home page gutter.
 - React Three Fiber + drei for 3D.
+- Node 24 LTS (`.nvmrc`), which both deploy workflows read. The Firebase
+  SDK needs Node 24.12 or newer, so `package.json` `engines` says the same.
 - TypeScript 6. Stay below 6.1 until `typescript-eslint` supports newer
   versions.
 
