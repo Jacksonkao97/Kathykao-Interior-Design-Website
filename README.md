@@ -66,3 +66,7 @@ npm i -g firebase-tools
 firebase login
 npm run deploy               # project is set in .firebaserc
 ```
+
+## License
+
+Copyright (c) 2026 Kathy Kao. All rights reserved. The code, design, photos, renders, 3D models and text are not licensed for reuse; see [LICENSE](LICENSE). Third-party packages and fonts keep their own licences.
