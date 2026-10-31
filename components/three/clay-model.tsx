@@ -108,6 +108,32 @@ function FrameDriver({ active, fps }: { active: boolean; fps: number }) {
   return null;
 }
 
+/**
+ * A soft round shadow on the ground under the model, for GPUs that can't run
+ * real shadows. It doesn't move with the sun, but keeps the model grounded.
+ */
+function GroundGlow() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 128;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gradient.addColorStop(0, "rgba(60,50,40,0.22)");
+    gradient.addColorStop(0.6, "rgba(60,50,40,0.12)");
+    gradient.addColorStop(1, "rgba(60,50,40,0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+  useEffect(() => () => texture.dispose(), [texture]);
+  return (
+    <mesh rotation-x={-Math.PI / 2} position-y={-0.09}>
+      <planeGeometry args={[16, 16]} />
+      <meshBasicMaterial map={texture} transparent depthWrite={false} />
+    </mesh>
+  );
+}
+
 /** The GPU's name, read while the context works (a lost context returns null). */
 function gpuName(gl: THREE.WebGLRenderer) {
   const context = gl.getContext();
@@ -200,6 +226,7 @@ export default function ClayModel({
   active,
   still,
   modelUrl,
+  shadows = true,
   onReady,
   onLost,
   onError,
@@ -207,6 +234,8 @@ export default function ClayModel({
   active: boolean;
   still: boolean;
   modelUrl?: string;
+  /** Off for GPUs whose drivers crash on shadow maps; a fixed soft shadow stands in. */
+  shadows?: boolean;
   onReady?: () => void;
   onLost?: () => void;
   onError?: () => void;
@@ -225,7 +254,7 @@ export default function ClayModel({
 
   return (
     <Canvas
-      shadows="percentage"
+      shadows={shadows ? "percentage" : false}
       dpr={[1, phone ? 1.25 : 2]}
       frameloop="demand"
       camera={{ fov: 28, near: 0.1, far: 100, position: [0, 17, 19] }}
@@ -253,7 +282,7 @@ export default function ClayModel({
         position={[-8, 11, 5]}
         intensity={8}
         color="#fff1e0"
-        castShadow
+        castShadow={shadows}
         shadow-mapSize={phone ? [1024, 1024] : [2048, 2048]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
@@ -270,10 +299,14 @@ export default function ClayModel({
       <Turntable still={still}>
         {geometry && <Model geometry={geometry} materials={materials} onReady={onReady} />}
       </Turntable>
-      <mesh rotation-x={-Math.PI / 2} position-y={-0.1} receiveShadow>
-        <planeGeometry args={[60, 60]} />
-        <shadowMaterial opacity={0.2} />
-      </mesh>
+      {shadows ? (
+        <mesh rotation-x={-Math.PI / 2} position-y={-0.1} receiveShadow>
+          <planeGeometry args={[60, 60]} />
+          <shadowMaterial opacity={0.2} />
+        </mesh>
+      ) : (
+        <GroundGlow />
+      )}
     </Canvas>
   );
 }
