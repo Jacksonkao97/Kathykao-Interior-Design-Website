@@ -26,9 +26,10 @@ function probeGpu() {
   }
 }
 
-// PowerVR GPUs (the Pixel 10 and some other phones) crash the browser's
-// graphics process while drawing the model's shadows, so they get none.
-const NO_SHADOW_GPU = /PowerVR|Imagination/i;
+// PowerVR GPUs (the Pixel 10 and some other phones) crash the browser a few
+// seconds into showing the model, with or without shadows, and the page
+// reloads; they get the still image.
+const NO_3D_GPU = /PowerVR|Imagination/i;
 
 // A device whose 3D crashed shows the still image for a week instead of
 // crashing again on every visit. "running" is set while the model shows and
@@ -109,7 +110,6 @@ export function FeaturedModel({
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [shadows, setShadows] = useState(true);
   const onReady = useCallback(() => setReady(true), []);
   const onLost = useCallback(() => {
     remember(CRASHED_KEY, true);
@@ -125,8 +125,7 @@ export function FeaturedModel({
         if (!entry.isIntersecting) return;
         near.disconnect();
         const gpu = probeGpu();
-        if (gpu === null || crashedRecently()) return;
-        setShadows(!NO_SHADOW_GPU.test(gpu));
+        if (gpu === null || NO_3D_GPU.test(gpu) || crashedRecently()) return;
         setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
         setMount(true);
       },
@@ -182,7 +181,6 @@ export function FeaturedModel({
               active={visible}
               still={reduceMotion}
               modelUrl={modelUrl && assetUrl(modelUrl)}
-              shadows={shadows}
               onReady={onReady}
               onLost={onLost}
               onError={onError}

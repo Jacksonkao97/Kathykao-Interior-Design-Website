@@ -97,12 +97,12 @@ projects (index and one static page per project), experience (labelled
   first context loss the still image shows until the browser restores the
   context; a second loss or a throw removes the canvas for good. Each loss
   sends a `webgl_context_lost` event with the GPU name to Google Analytics.
-- PowerVR GPUs (Pixel 10) crashed the browser's graphics process while the
-  model ran with shadows, which reloads the page. `FeaturedModel` reads the
-  GPU name first and turns real shadows off for them (`NO_SHADOW_GPU`); a
-  fixed soft shadow stands in. A device whose 3D crashed (context lost, or
-  the page died while the model showed) gets the still image for a week,
-  tracked in localStorage.
+- PowerVR GPUs (Pixel 10) crash Chrome a few seconds into showing the model,
+  with or without shadows, and the page reloads. `FeaturedModel` reads the
+  GPU name before loading three.js and gives them the still image
+  (`NO_3D_GPU`). Any device whose 3D crashed (context lost, or the page died
+  while the model showed) also gets the still image for a week, tracked in
+  localStorage.
 - Scroll fades: add `data-reveal` to an element and `<ScrollFades>` (in the
   root layout) fades it in on entering the screen and out on leaving. Set
   `--reveal-delay` to stagger a row. Don't put it on the hero.
