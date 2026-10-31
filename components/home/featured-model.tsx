@@ -61,6 +61,7 @@ export function FeaturedModel({
   const [failed, setFailed] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const onReady = useCallback(() => setReady(true), []);
+  const onLost = useCallback(() => setReady(false), []);
   const onError = useCallback(() => setFailed(true), []);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export function FeaturedModel({
               still={reduceMotion}
               modelUrl={modelUrl && assetUrl(modelUrl)}
               onReady={onReady}
+              onLost={onLost}
               onError={onError}
             />
           </ModelBoundary>

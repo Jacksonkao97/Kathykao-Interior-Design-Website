@@ -89,11 +89,14 @@ projects (index and one static page per project), experience (labelled
 - The model turns under a fixed sun (the group rotates, not the camera), so
   shadows sweep through the rooms. Parts carry a `tone` that picks one of a
   few clay materials.
-- Phones drop the WebGL context when a page uses too much GPU memory, which
+- Phones drop the WebGL context when a page asks too much of the GPU, which
   used to leave a blank box. Keep the model light: draw one merged mesh per
   tone (never a mesh per part), and keep the phone limits in `ClayModel`
-  (pixel ratio 1.5, 1024 shadow map). If the context is lost or the canvas
-  throws, `FeaturedModel` removes it and shows the still image again.
+  (touch screens get pixel ratio 1.25, a 1024 shadow map and 30 frames a
+  second; the canvas uses `frameloop="demand"` driven by `FrameDriver`). On a
+  first context loss the still image shows until the browser restores the
+  context; a second loss or a throw removes the canvas for good. Each loss
+  sends a `webgl_context_lost` event with the GPU name to Google Analytics.
 - Scroll fades: add `data-reveal` to an element and `<ScrollFades>` (in the
   root layout) fades it in on entering the screen and out on leaving. Set
   `--reveal-delay` to stagger a row. Don't put it on the hero.
