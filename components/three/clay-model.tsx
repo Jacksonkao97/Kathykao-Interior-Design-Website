@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -222,6 +222,16 @@ export default function ClayModel({
   const phone =
     window.matchMedia("(pointer: coarse)").matches || Math.min(window.screen.width, window.screen.height) < 768;
   const losses = useRef(0);
+  // React Three Fiber drops the context itself when the canvas unmounts
+  // (leaving the home page); that isn't a crash. A layout effect, because its
+  // cleanup runs before the Canvas's own teardown.
+  const unmounted = useRef(false);
+  useLayoutEffect(() => {
+    unmounted.current = false;
+    return () => {
+      unmounted.current = true;
+    };
+  }, []);
 
   return (
     <Canvas
@@ -236,6 +246,7 @@ export default function ClayModel({
         // keep up, so the page keeps the still image.
         const gpu = gpuName(gl);
         gl.domElement.addEventListener("webglcontextlost", (event) => {
+          if (unmounted.current) return;
           event.preventDefault();
           losses.current += 1;
           reportContextLoss(gpu, losses.current);

@@ -100,9 +100,13 @@ projects (index and one static page per project), experience (labelled
 - PowerVR GPUs (Pixel 10) crash Chrome a few seconds into showing the model,
   with or without shadows, and the page reloads. `FeaturedModel` reads the
   GPU name before loading three.js and gives them the still image
-  (`NO_3D_GPU`). Any device whose 3D crashed (context lost, or the page died
-  while the model showed) also gets the still image for a week, tracked in
-  localStorage.
+  (`NO_3D_GPU`). Any device whose 3D crashed also gets the still image for a
+  week, tracked in localStorage. A crash is a context loss while the canvas
+  is mounted, or a heartbeat (written every second while the model shows)
+  from just before the current document started. Client-side navigation
+  keeps the document, and React Three Fiber drops the context on purpose
+  when the canvas unmounts, so neither may count: `ClayModel` ignores losses
+  after its layout-effect cleanup.
 - Scroll fades: add `data-reveal` to an element and `<ScrollFades>` (in the
   root layout) fades it in on entering the screen and out on leaving. Set
   `--reveal-delay` to stagger a row. Don't put it on the hero.

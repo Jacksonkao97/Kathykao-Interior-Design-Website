@@ -32,12 +32,19 @@ function probeGpu() {
 const NO_3D_GPU = /PowerVR|Imagination/i;
 
 // A device whose 3D crashed shows the still image for a week instead of
-// crashing again on every visit. "running" is set while the model shows and
-// cleared when the page is hidden, so finding it on load means the page died
-// with the model on screen (some phones reload the page when the GPU fails).
-const CRASHED_KEY = "clay-model-crashed";
-const RUNNING_KEY = "clay-model-running";
+// crashing again on every visit. Some phones reload the page when the GPU
+// fails, so while the model shows it writes a heartbeat every second; a
+// heartbeat from the last few seconds before this document started means the
+// previous page died with the model on screen. Leaving the page (pagehide)
+// clears it, and moving between pages inside the site keeps the same
+// document, so neither looks like a crash.
+const CRASHED_KEY = "clay-model-crash";
+const HEARTBEAT_KEY = "clay-model-heartbeat";
+const HEARTBEAT_MS = 1000;
 const CRASH_MEMORY_MS = 7 * 24 * 60 * 60 * 1000;
+// Keys from the first version, which also counted leaving the home page as a
+// crash; removed so those visitors get the 3D back.
+const OLD_KEYS = ["clay-model-crashed", "clay-model-running"];
 
 function storage() {
   try {
@@ -51,10 +58,13 @@ function crashedRecently() {
   const store = storage();
   if (!store) return false;
   try {
-    if (store.getItem(RUNNING_KEY)) {
-      store.removeItem(RUNNING_KEY);
+    OLD_KEYS.forEach((key) => store.removeItem(key));
+    const beat = Number(store.getItem(HEARTBEAT_KEY) ?? 0);
+    const start = performance.timeOrigin;
+    if (beat < start && beat > start - 3 * HEARTBEAT_MS) {
       store.setItem(CRASHED_KEY, String(Date.now()));
     }
+    store.removeItem(HEARTBEAT_KEY);
     return Date.now() - Number(store.getItem(CRASHED_KEY) ?? 0) < CRASH_MEMORY_MS;
   } catch {
     return false;
@@ -140,16 +150,16 @@ export function FeaturedModel({
     };
   }, []);
 
-  // Marks the model as running while it is on a visible page; see RUNNING_KEY.
+  // Writes the heartbeat while the model shows on a visible page; see HEARTBEAT_KEY.
   useEffect(() => {
     if (!ready || failed) return;
-    const mark = () => remember(RUNNING_KEY, document.visibilityState === "visible");
-    const clear = () => remember(RUNNING_KEY, false);
-    mark();
-    document.addEventListener("visibilitychange", mark);
+    const beat = () => remember(HEARTBEAT_KEY, document.visibilityState === "visible");
+    const clear = () => remember(HEARTBEAT_KEY, false);
+    beat();
+    const timer = window.setInterval(beat, HEARTBEAT_MS);
     window.addEventListener("pagehide", clear);
     return () => {
-      document.removeEventListener("visibilitychange", mark);
+      window.clearInterval(timer);
       window.removeEventListener("pagehide", clear);
       clear();
     };
